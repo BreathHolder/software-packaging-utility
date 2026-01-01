@@ -1,0 +1,25 @@
+Scan Information
+=========================================
+
+Start Time: Mon Jan 5 13:56:29 2024
+End Time:   MON Jan 5 14:01:54 2024
+
+Host Information
+=========================================
+
+DNS Name:        D-128-13-168.test-lab.acme.io
+Netbios Name:    GRA-ADAMS
+IP:              72.124.36.112
+MAC Address:     00:14:22:2b:66:24
+OS:              Microsoft Windows 11, 24H2
+
+Result Summary
+=========================================
+
+Critical: 0
+High:     0
+Medium:   0
+Low:      0
+Info:     20
+----------------
+Total:    20

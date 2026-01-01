@@ -1,0 +1,30 @@
+# Virtual environments
+/env
+/.venv
+/venv
+
+# Downloaded images
+/images/*
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Credentials and tokens
+token.pickle
+.env
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Executable files
+*.exe
+*.msi

@@ -1,0 +1,268 @@
+# Software Packaging Utilities
+
+A Python application for package managing application source, standardize application storeage, and create reporting for standard adherence.
+
+## Features
+
+- **Configurable Settings**: Easily customize packaging and reporting settings through a settings section.
+- **Robust Error Handling**: Comprehensive error handling and logging, with breakouts for distinct error logging and function execution results.
+- **Type Safety**: Ensure type checking to prevent bottle-necked processes.
+- **Testing**: 
+
+## Prerequisites
+
+Before using Software Package Utilities, you'll need to set up the following:
+
+### Python 3.9x
+
+## Installation
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/breathholder/software-package-utilities.git
+cd software-package-utilities
+```
+
+### 2. Set Up Virtual Environment
+
+Create and activate a virtual environment, then install dependencies from `requirements.txt`.
+
+```bash
+python -m venv .venv
+.venv/Scripts/activate  # Windows
+# or
+source .venv/bin/activate  # macOS/Linux
+
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+### 3. Configure Environment
+
+Copy the example environment file and fill in your credentials:
+
+### 4. Configure Settings
+
+Edit `settings/vendors.json` and add the vendor list with one vendor name, in quotes, per line. Add a comma after the quoted vendor name on every line execpt the last line:
+
+```json
+[
+  "Adobe",
+  "Cisco",
+  "Google",
+  "Microsoft",
+  "Mozilla",
+  "Piriform"
+]
+```
+
+Edit `settings/software_names.json` and add the software list with one software name, in quotes, per line. Add a comma after the quoted software name on every line execpt the last line:
+
+```json
+[
+  "Photoshop",
+  "Premiere",
+  "AnyConnect",
+  "Windows 11",
+  "Word",
+  "Excel",
+  "PowerPoint",
+  "Firefox",
+  "CCleaner"
+]
+```
+
+## Usage
+
+### Basic Usage
+
+Run the utilities app from the project root:
+
+```bash
+python -m src.main
+```
+
+Or use the VS Code task:
+
+- Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (macOS)
+- Type "Tasks: Run Task"
+- Select "Run Software Packaging Utilities"
+
+### What the Script Does
+
+## Configuration
+
+The application uses multiple configuration files:
+
+### Environment Variables (`.env`)
+
+### Application Settings (`src/config.py`)
+
+```python
+# File and directory settings
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+SETTINGS_DIR = PROJECT_ROOT / "settings"
+REPORTS_DIR = PROJECT_ROOT / "reports"
+LOGGING_DIR = PROJECT_ROOT / "logs"
+RETENTION_EXCEPTIONS_DIR = PROJECT_ROOT / "retention"
+
+# Retention period settings (days)
+RETENTION_SCAN_REQUESTs = 30
+RETENTION_MANUAL_INSTALLS = 90
+RETENTION_PACKAGED_APPLICATIONS = 366
+
+# Configuration file paths
+FILE_PATHS_VENDOR_NAMES = SETTINGS_DIR / "vendor_names.json"
+FILE_PATHS_SOFTWARE_NAMES = SETTINGS_DIR / "software_names.json"
+FILE_PATHS_DEPENDENCY_NAMES = SETTINGS_DIR / "dependency_names.json"
+
+# Software paths (UNC-mapped to a local drive, e.g., D:\)
+SOFTWARE_PATHS_SOURCE = Path("D:/Software_Packaging/Source")
+SOFTWARE_PATHS_SCAN_REQUESTS = SOFTWARE_PATHS_SOURCE / "Scan_Requests"
+SOFTWARE_PATHS_MANUAL_INSTALLS = SOFTWARE_PATHS_SOURCE / "Manual_Installs"
+SOFTWARE_PATHS_PACKAGED = Path("D:/Software_Packaging/Packaged_Applications")
+SOFTWARE_PATHS_STAGING = Path("D:/Software_Packaging/Packaged_Staging")
+SOFTWARE_PATHS_PENDING_PROJECT_APPROVAL = Path(
+    "D:/Software_Packaging/Pending_Project_Approval"
+)
+SOFTWARE_PATHS_ARCHIVE = Path("D:/Software_Packaging/Archive")
+
+# Logging level settings
+LOGGING_LEVEL = "INFO"
+
+# Reporting output settings
+REPORTING_OUTPUT_SCAN_REQUESTS = REPORTS_DIR / "scan_requests.csv"
+REPORTING_OUTPUT_MANUAL_INSTALLS = REPORTS_DIR / "manual_installs.csv"
+REPORTING_OUTPUT_PACKAGED_APPLICATIONS = REPORTS_DIR / "packaged_applications.csv"
+
+# Retention exception lists (CSV per category)
+RETENTION_EXCEPTIONS_MANUAL_INSTALLS = (
+    RETENTION_EXCEPTIONS_DIR / "exception_manual_installs.csv"
+)
+RETENTION_EXCEPTIONS_PACKAGED_APPLICATIONS = (
+    RETENTION_EXCEPTIONS_DIR / "exception_packaged_applications.csv"
+)
+RETENTION_EXCEPTIONS_PENDING_PROJECT_APPROVAL = (
+    RETENTION_EXCEPTIONS_DIR / "exception_pending_project_approval.csv"
+)
+RETENTION_EXCEPTIONS_ARCHIVE = RETENTION_EXCEPTIONS_DIR / "exception_archive.csv"
+```
+
+## Project Structure
+
+```text
+software-packaging-utilities/
+├── src/
+│   ├── __init__.py
+│   ├── main.py                # Application entry point
+│   ├── config.py              # Configuration constants/paths
+│   └── utils/
+│       ├── __init__,.py
+│       ├── metadata_extractor.py
+│       ├── package_builder.py
+│       ├── package_info_creator.py
+│       ├── package_renamer.py
+│       ├── reporting.py
+│       ├── screen_source_info.py
+│       └── settings.py
+├── settings/
+│   ├── settings.json
+│   ├── vendor_names.json
+│   ├── software_names.json
+│   └── dependency_names.json
+├── tests/
+│   ├── __init__.py
+│   ├── harness.py
+│   ├── test_metadata.py
+│   ├── test_screen_source_info.py
+│   └── files/
+│       ├── Calibre.Calibre.x64_8_13_0.Matty.msi
+│       ├── Microsoft.Visual_Studio_Code.x64_1_106_3.Matty.exe
+│       └── Piriform_Software.CCleaner.x64.7_1_1066.Matty.exe
+├── docs/
+│   └── app_requirements.md
+├── logs/
+│   └── json_edit_requests.log
+├── build/                     # PyInstaller build artifacts
+├── dist/                      # PyInstaller output
+├── app.spec                   # PyInstaller spec
+├── requirements.txt
+├── rocket-gear.ico
+├── LICENSE
+└── README.md
+```
+
+## Development
+
+### Running Tests (not built yet)
+
+```bash
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=src
+
+# Run specific test file
+pytest tests/test_main.py
+```
+
+### Code Quality (not built yet)
+
+```bash
+# Format code with Black
+black src/ tests/
+
+# Sort imports with isort
+isort src/ tests/
+
+# Lint with flake8
+flake8 src/ tests/
+```
+
+## Troubleshooting (not built yet)
+
+### Common Issues (not built yet)
+
+## Prerequisites
+- Python 3 installed (or use the packaged `app.exe` built with PyInstaller --not implemented yet).
+- No network access required. Logs are written locally in `logs/`.
+
+## Configure settings (not built yet)
+
+### General (not built yet)
+
+1. Logging Levels
+2. Directory Path Defaults
+3. JSON File Path Configuration (local vs. GH)
+
+### Scanning (not built yet)
+
+1. Scanning: Time-to-Live (days) by Path
+
+## Utility 1: PackageInfo.txt File Builder
+
+- **Purpose**: 
+
+## Utility 2: Package Directory Builder
+
+- **Purpose**: 
+
+## Utility 3: Settings Management
+
+- **Purpose**: 
+
+## Utility 4: Scan & Report Generation
+
+### Standard Adherence
+
+- **Purpose**: 
+
+### Picklist Deviations & Updates
+
+- **Purpose**: 
+
+### Package Clean-Up
+
+- **Purpose**: 

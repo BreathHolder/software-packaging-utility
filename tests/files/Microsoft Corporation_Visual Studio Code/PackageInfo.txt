@@ -1,0 +1,38 @@
+Request ID: REQ012346
+Requestor Name: Michelle McRelease
+Software Reference ID: EUA-IDE-001
+Software Technology Owner ID: TECH_OWNER_001
+Licensed Software Flag: No
+Software Vendor: Microsoft Corporation
+Software Name: Visual Studio Code
+Software Version: 1.106.3
+Software Architecture: x86
+Software SHA1 Hash: b60a19ff16ab686a4064c94cc3b2fee6f57d43fe
+Software SHA256 Hash: 2386630334ecdb9a56d9b33d07d9ce406e4d66ea89b835f047394b0765538e61
+Software Dependencies: Microsoft .NET Framework
+Software Vulnerability Scan Results Status: Scan results found. No vulnerabilities found
+Software Vulnerability Scan Results Details: Scan Information
+=========================================
+
+Start Time: Mon Jan 5 13:56:29 2024
+End Time:   MON Jan 5 14:01:54 2024
+
+Host Information
+=========================================
+
+DNS Name:        D-128-13-168.test-lab.acme.io
+Netbios Name:    GRA-ADAMS
+IP:              72.124.36.112
+MAC Address:     00:14:22:2b:66:24
+OS:              Microsoft Windows 11, 24H2
+
+Result Summary
+=========================================
+
+Critical: 0
+High:     0
+Medium:   0
+Low:      0
+Info:     20
+----------------
+Total:    20

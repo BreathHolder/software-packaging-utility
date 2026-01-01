@@ -1,0 +1,13 @@
+{
+  "dest_unc_path": "C:/Users/Matty/Downloads/Test",
+  "log_level": "Verbose",
+  "scan_root": "C:/Users/Matty/Downloads/Test",
+  "scan_age_days": 30,
+  "working_dir": "C:/Users/Matty/Downloads/Test/working-dir",
+  "source_path": "D:/Software_Packaging/Source",
+  "scan_requests_path": "D:/Software_Packaging/Source/Scan_Requests",
+  "manual_installs_path": "D:/Software_Packaging/Source/Manual_Installs",
+  "packaged_applications_path": "D:/Software_Packaging/Packaged_Applications",
+  "packaged_staging_path": "D:/Software_Packaging/Packaged_Staging",
+  "archive_path": "D:/Software_Packaging/Archive2"
+}
