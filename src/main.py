@@ -108,9 +108,11 @@ class RibbonApp(tk.Tk):
         self._content_canvas = canvas
 
         def _on_frame_configure(_event) -> None:
+            """Resize the scrollable region after content changes."""
             canvas.configure(scrollregion=canvas.bbox("all"))
 
         def _on_canvas_configure(event) -> None:
+            """Keep the inner frame width aligned to the canvas."""
             canvas.itemconfigure(self._scroll_window, width=event.width)
 
         self._scrollable_frame.bind("<Configure>", _on_frame_configure)
@@ -135,13 +137,16 @@ class RibbonApp(tk.Tk):
         }
 
         def _on_click(_event=None) -> None:
+            """Activate the selected page on click."""
             command()
 
         def _on_enter(_event=None) -> None:
+            """Mark hover state for the tab for visual feedback."""
             self._nav_items[key]["hover"] = True
             self._redraw_nav_item(key)
 
         def _on_leave(_event=None) -> None:
+            """Clear hover state when the cursor leaves the tab."""
             self._nav_items[key]["hover"] = False
             self._redraw_nav_item(key)
 
@@ -304,9 +309,11 @@ class RibbonApp(tk.Tk):
     def _bind_mousewheel(self, canvas: tk.Canvas) -> None:
         """Enable mouse-wheel scrolling for the main content canvas."""
         def _on_mousewheel(event) -> None:
+            """Scroll on Windows/macOS using MouseWheel delta."""
             canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
         def _on_mousewheel_linux(event) -> None:
+            """Scroll on Linux using button events."""
             if event.num == 4:
                 canvas.yview_scroll(-1, "units")
             elif event.num == 5:

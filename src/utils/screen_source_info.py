@@ -30,6 +30,7 @@ class SourceInfoScreen:
         vendor_names_path: Path = FILE_PATHS_VENDOR_NAMES,
         software_names_path: Path = FILE_PATHS_SOFTWARE_NAMES,
     ) -> None:
+        """Initialize picklist paths for interactive screening."""
         self._vendor_names_path = vendor_names_path
         self._software_names_path = software_names_path
 
@@ -219,12 +220,14 @@ def _prompt_text(label: str, current: str, require: bool) -> str:
 
 
 def _default_index(options: List[str], current: str) -> Optional[int]:
+    """Return the 1-based default index for the current value."""
     if current in options:
         return options.index(current) + 1
     return None
 
 
 def _is_unknown(value: str) -> bool:
+    """Return True when a value is empty or marked Unknown."""
     return not value or value.strip().lower() == UNKNOWN_VALUE.lower()
 
 
@@ -239,6 +242,7 @@ def _confirm_override(message: str) -> bool:
 
 
 def _is_opposite_arch(current: str, selection: str) -> bool:
+    """Return True when the selection conflicts with detected architecture."""
     if not current:
         return False
     current_lower = current.strip().lower()

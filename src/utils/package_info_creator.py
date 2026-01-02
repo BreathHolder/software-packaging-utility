@@ -69,16 +69,20 @@ def build_package_info_creator_frame(
     auto_labels: dict[str, ttk.Label] = {}
 
     def set_dirty(value: bool = True) -> None:
+        """Mark the page dirty so tab switching warns about unsaved edits."""
         frame.is_dirty = value  # type: ignore[attr-defined]
 
     def mark_dirty(_event=None) -> None:
+        """Event handler that marks the page dirty."""
         set_dirty(True)
 
     def set_existing_package_info(path: Path) -> None:
+        """Track the existing PackageInfo.txt path for updates."""
         nonlocal existing_package_info_path
         existing_package_info_path = path
 
     def set_metadata(metadata: InstallerMetadata) -> None:
+        """Populate automatic fields from extracted installer metadata."""
         nonlocal current_metadata
         current_metadata = metadata
         vendor_var.set(metadata.vendor_name)
@@ -215,6 +219,7 @@ def build_package_info_creator_frame(
             manual_labels["Software Vulnerability Scan Results Details"] = details_label
 
             def _toggle_scan_details(_event=None) -> None:
+                """Show or hide scan details based on status selection."""
                 selection = status_var.get()
                 if selection in {
                     "Scan results found. No vulnerabilities found",
@@ -504,6 +509,7 @@ def _load_picklist(path: Path) -> list[str]:
 
 
 def _with_add_option(options: list[str]) -> list[str]:
+    """Append the add-new sentinel option for comboboxes."""
     return [*options, "Add new..."]
 
 
@@ -515,6 +521,7 @@ def _handle_add_option(
     metadata: Optional[InstallerMetadata],
     path_entry: ttk.Entry,
 ) -> None:
+    """Handle the add-new combobox selection and log the request."""
     if combo.get() != "Add new...":
         return
     new_value = simpledialog.askstring(
@@ -538,6 +545,7 @@ def _handle_add_option(
 
 
 def _fallback_value(label: str, metadata: Optional[InstallerMetadata]) -> str:
+    """Fallback to metadata values when a picklist add is canceled."""
     if not metadata:
         return UNKNOWN_VALUE
     if label == "Vendor":
@@ -615,6 +623,11 @@ def _generate_package_info(
     allow_installer: bool,
     set_dirty: Callable[[bool], None],
 ) -> None:
+    """Validate inputs and write PackageInfo.txt to disk.
+
+    Troubleshooting: if saving fails, confirm file permissions and that
+    the target folder exists and is writable.
+    """
     installer_path: Optional[Path] = None
     if installer_path_str:
         installer_path = Path(installer_path_str).expanduser()
@@ -732,6 +745,7 @@ def _collect_manual_values(
     software_version: str,
     software_architecture: str,
 ) -> dict[str, str]:
+    """Collect manual field values into a dictionary."""
     values: dict[str, str] = {}
     for label, widget in manual_widgets.items():
         if isinstance(widget, dict):
@@ -759,6 +773,7 @@ def _build_package_info_content(
     sha1_hash: str,
     sha256_hash: str,
 ) -> str:
+    """Build the PackageInfo.txt body, including a scan-details block."""
     scan_details = manual_values.get("Software Vulnerability Scan Results Details", "").strip()
     lines = [
         f"Request ID: {manual_values.get('Request ID', '')}",
@@ -792,6 +807,7 @@ def _apply_package_info_values(
     sha256_var: tk.StringVar,
     manual_widgets: dict[str, Any],
 ) -> None:
+    """Populate UI fields from a parsed PackageInfo.txt payload."""
     field_map = {
         "Software Vendor": vendor_var,
         "Software Name": software_var,
@@ -834,12 +850,14 @@ def _apply_package_info_values(
 
 
 def _sanitize_folder_name(value: str) -> str:
+    """Sanitize a value for filesystem-safe folder names."""
     invalid_chars = '<>:"/\\|?*'
     sanitized = "".join("_" if ch in invalid_chars else ch for ch in value)
     return sanitized.strip() or "Package"
 
 
 def _toggle_other_dependency(entry: ttk.Entry, other_var: tk.BooleanVar) -> None:
+    """Enable/disable the Other dependency input based on the checkbox."""
     if other_var.get():
         entry.configure(state="normal")
         entry.focus_set()
@@ -849,7 +867,9 @@ def _toggle_other_dependency(entry: ttk.Entry, other_var: tk.BooleanVar) -> None
 
 
 def _track_text_modified(widget: tk.Text, callback) -> callable:
+    """Create a handler that fires when a Text widget is modified."""
     def _handler(_event=None) -> None:
+        """Normalize Text change events into a single callback."""
         if widget.edit_modified():
             callback()
             widget.edit_modified(False)
@@ -865,6 +885,7 @@ def _collect_dependency_values(
     software_version: str,
     software_architecture: str,
 ) -> str:
+    """Collect dependency selections into a string for PackageInfo.txt."""
     listbox = widget_parts["listbox"]
     other_var = widget_parts["other_var"]
     other_entry = widget_parts["other_entry"]
@@ -901,6 +922,7 @@ def _validate_required_fields(
     manual_labels: dict[str, ttk.Label],
     auto_labels: dict[str, ttk.Label],
 ) -> bool:
+    """Validate required fields and highlight any missing values."""
     missing_fields: list[str] = []
 
     _reset_label_states({**manual_labels, **auto_labels})
@@ -950,6 +972,7 @@ def _validate_required_fields(
 
 
 def _has_dependency_selection(widget_parts: dict) -> bool:
+    """Return True if a dependency selection is present."""
     listbox = widget_parts["listbox"]
     other_var = widget_parts["other_var"]
     other_entry = widget_parts["other_entry"]
@@ -965,11 +988,13 @@ def _has_dependency_selection(widget_parts: dict) -> bool:
 
 
 def _reset_label_states(labels: dict[str, ttk.Label]) -> None:
+    """Clear error styling on all tracked labels."""
     for label in labels.values():
         _set_label_error(label, is_error=False)
 
 
 def _set_label_error(label: Optional[ttk.Label], is_error: bool = True) -> None:
+    """Apply or clear error styling on a label."""
     if label is None:
         return
     if is_error:
@@ -979,6 +1004,7 @@ def _set_label_error(label: Optional[ttk.Label], is_error: bool = True) -> None:
 
 
 def _populate_dependencies(widget_parts: dict, value: str) -> None:
+    """Populate dependency widgets from a stored value string."""
     listbox = widget_parts["listbox"]
     other_var = widget_parts["other_var"]
     other_entry = widget_parts["other_entry"]
@@ -1034,6 +1060,7 @@ def _toggle_no_dependencies(
     other_var: tk.BooleanVar,
     none_var: tk.BooleanVar,
 ) -> None:
+    """Toggle the No dependencies mode and disable conflicting inputs."""
     if none_var.get():
         listbox.selection_clear(0, tk.END)
         listbox.configure(state="disabled")
@@ -1067,6 +1094,7 @@ def _attach_tooltip(widget: tk.Widget, text: str) -> None:
     label.pack()
 
     def show_tooltip(event) -> None:
+        """Display the tooltip near the hovered widget."""
         tooltip.update_idletasks()
         x = widget.winfo_rootx() + 20
         y = widget.winfo_rooty() + 20
@@ -1074,6 +1102,7 @@ def _attach_tooltip(widget: tk.Widget, text: str) -> None:
         tooltip.deiconify()
 
     def hide_tooltip(_event) -> None:
+        """Hide the tooltip when the cursor leaves."""
         tooltip.withdraw()
 
     widget.bind("<Enter>", show_tooltip)

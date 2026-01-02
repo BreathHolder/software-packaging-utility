@@ -7,7 +7,11 @@ from tkinter import ttk
 
 
 def apply_styles(app: tk.Tk) -> dict[str, str]:
-    """Apply ttk styles and return shared color tokens."""
+    """Apply ttk styles and return shared color tokens.
+
+    Troubleshooting: if styles do not apply, ensure a ttk theme is available
+    on the host OS and that this runs before widgets are created.
+    """
     style = ttk.Style(app)
     style.theme_use("vista")
     style.configure("App.TFrame", background="#f7f3ee")
@@ -16,7 +20,7 @@ def apply_styles(app: tk.Tk) -> dict[str, str]:
     style.configure("Content.TFrame", background="#f7f3ee")
     style.configure("Header.TLabel", background="#f7f3ee", foreground="#1f2a36")
     style.configure("Body.TLabel", background="#f7f3ee", foreground="#4b5a6a")
-    """Make the background grey colors match"""
+    # Keep ttk frames/labelframes aligned with the content background.
     style.configure("TFrame", background="#f7f3ee")
     style.configure("TLabelframe", background="#f7f3ee")
     style.configure("TLabelframe.Label", background="#f7f3ee", foreground="#1f2a36")

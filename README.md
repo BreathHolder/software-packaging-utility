@@ -4,7 +4,7 @@ A Python application for package managing application source, standardize applic
 
 ## Features
 
-- **Configurable Settings**: Easily customize packaging and reporting settings through a settings section.
+- **Configurable Settings**: Configure source/packaging paths, settings file sources, and content age from the Settings tab.
 - **Robust Error Handling**: Comprehensive error handling and logging, with breakouts for distinct error logging and function execution results.
 - **Type Safety**: Ensure type checking to prevent bottle-necked processes.
 - **Testing**: 
@@ -38,13 +38,9 @@ python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 3. Configure Environment
+### 3. Configure Settings
 
-Copy the example environment file and fill in your credentials:
-
-### 4. Configure Settings
-
-Edit `settings/vendors.json` and add the vendor list with one vendor name, in quotes, per line. Add a comma after the quoted vendor name on every line execpt the last line:
+Edit `settings/vendor_names.json` and add the vendor list with one vendor name, in quotes, per line. Add a comma after the quoted vendor name on every line execpt the last line:
 
 ```json
 [
@@ -90,6 +86,10 @@ Or use the VS Code task:
 - Select "Run Software Packaging Utilities"
 
 ### What the Script Does
+
+- **Package Info File Creator**: Load an installer, review metadata, and generate `PackageInfo.txt`.
+- **Package Info File Updater**: Import an existing `PackageInfo.txt`, edit fields, and save updates.
+- **Settings**: Configure base paths, content age (days), and the source for JSON settings files (local or GitHub).
 
 ## Configuration
 
@@ -157,6 +157,7 @@ software-packaging-utilities/
 │   ├── __init__.py
 │   ├── main.py                          # Application entry point
 │   ├── config.py                        # Configuration constants/paths
+│   ├── ui_styles.py                     # Shared ttk styles/colors
 │   └── utils/
 │       ├── __init__,.py
 │       ├── metadata_extractor.py
@@ -167,6 +168,10 @@ software-packaging-utilities/
 │       ├── reporting.py
 │       ├── screen_source_info.py
 │       └── settings.py
+├── images/
+│   ├── SPU-Logo-Square-32.png
+│   ├── SPU-Logo-Square-128.png
+│   └── ...
 ├── settings/
 │   ├── settings.json
 │   ├── vendor_names.json
@@ -186,7 +191,7 @@ software-packaging-utilities/
 ├── dist/                                # PyInstaller output
 ├── app.spec                             # PyInstaller spec
 ├── requirements.txt
-├── spu-logo.ico                         # SPU Branded Logo
+├── rocket-gear.ico
 ├── LICENSE                              # MIT License
 └── README.md                            # 👇 This is where you currently are
 ```
@@ -249,7 +254,7 @@ flake8 src/ tests/
 
 ## Utility 3: Settings Management
 
-- **Purpose**: 
+- **Purpose**: Configure base paths, content age (days), and JSON settings sources (local vs GitHub).
 
 ## Utility 4: Scan & Report Generation
 

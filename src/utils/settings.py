@@ -114,12 +114,15 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
     )
 
     def set_dirty(value: bool = True) -> None:
+        """Mark the settings page dirty so tab switching prompts the user."""
         frame.is_dirty = value  # type: ignore[attr-defined]
 
     def mark_dirty(_event=None) -> None:
+        """Event handler that marks the page dirty on edits."""
         set_dirty(True)
 
     def update_source_children(*_args) -> None:
+        """Auto-derive Scan_Requests/Manual_Installs from Source."""
         source = Path(source_var.get().strip() or str(SOFTWARE_PATHS_SOURCE))
         scan_requests_var.set(str(source / "Scan_Requests"))
         manual_installs_var.set(str(source / "Manual_Installs"))
@@ -344,6 +347,7 @@ def _add_path_row(
     readonly: bool = False,
     on_change=None,
 ) -> None:
+    """Render a labeled path input with an optional browse button."""
     ttk.Label(parent, text=label, style="Body.TLabel").grid(
         row=row, column=0, sticky="w", pady=4, padx=(0, 12)
     )
@@ -369,6 +373,7 @@ def _add_text_row(
     variable: tk.StringVar,
     on_change=None,
 ) -> None:
+    """Render a simple labeled text input."""
     ttk.Label(parent, text=label, style="Body.TLabel").grid(
         row=row, column=0, sticky="w", pady=4, padx=(0, 12)
     )
@@ -378,6 +383,7 @@ def _add_text_row(
 
 
 def _browse_directory(variable: tk.StringVar, on_change=None) -> None:
+    """Prompt for a folder and update the bound variable."""
     directory = filedialog.askdirectory(title="Select Folder")
     if not directory:
         return
@@ -409,6 +415,10 @@ def _save_settings(
     content_age_archive_days: str,
     set_dirty,
 ) -> None:
+    """Validate inputs and persist settings to settings.json.
+
+    Troubleshooting: if save fails, confirm file permissions on settings.json.
+    """
     required = {
         "Source": source_path,
         "Packaged_Applications": packaged_path,
@@ -475,6 +485,7 @@ def _save_settings(
 
 
 def _load_settings() -> dict[str, Any]:
+    """Load settings.json into a dictionary."""
     if not SETTINGS_FILE.exists():
         return {}
     try:
@@ -488,6 +499,7 @@ def _load_settings() -> dict[str, Any]:
 
 
 def _get_setting(settings: dict[str, Any], key: str, fallback: Path) -> str:
+    """Return a normalized path setting, resolving relative paths."""
     value = settings.get(key)
     if isinstance(value, str) and value.strip():
         return _normalize_path(_resolve_path(value.strip(), SETTINGS_DIR))
@@ -495,6 +507,7 @@ def _get_setting(settings: dict[str, Any], key: str, fallback: Path) -> str:
 
 
 def _get_string_setting(settings: dict[str, Any], key: str, fallback: str) -> str:
+    """Return a string setting or fallback if missing."""
     value = settings.get(key)
     if isinstance(value, str):
         return value.strip()
@@ -502,6 +515,7 @@ def _get_string_setting(settings: dict[str, Any], key: str, fallback: str) -> st
 
 
 def _get_int_setting(settings: dict[str, Any], key: str, fallback: int) -> int:
+    """Return an integer setting or fallback if missing/invalid."""
     value = settings.get(key)
     if isinstance(value, int):
         return value
@@ -511,14 +525,17 @@ def _get_int_setting(settings: dict[str, Any], key: str, fallback: int) -> int:
 
 
 def _is_valid_age(value: str) -> bool:
+    """Return True when the content age field is a whole number string."""
     return bool(value.strip()) and value.strip().isdigit()
 
 
 def _normalize_path(path: str) -> str:
+    """Normalize a path to forward slashes for storage."""
     return path.replace("\\", "/")
 
 
 def _relativize_path(path: str, base_dir: Path) -> str:
+    """Return a path relative to base_dir when possible."""
     if not path:
         return path
     try:
@@ -530,6 +547,7 @@ def _relativize_path(path: str, base_dir: Path) -> str:
 
 
 def _resolve_path(path: str, base_dir: Path) -> str:
+    """Resolve a relative path against base_dir for display."""
     if not path:
         return path
     if "://" in path or Path(path).is_absolute():
