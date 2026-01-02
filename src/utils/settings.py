@@ -431,9 +431,15 @@ def _save_settings(
     updated["packaged_staging_path"] = _normalize_path(staging_path)
     updated["archive_path"] = _normalize_path(archive_path)
     updated["settings_source"] = settings_source.strip() or "local"
-    updated["vendor_names_path"] = _normalize_path(vendor_names_path)
-    updated["software_names_path"] = _normalize_path(software_names_path)
-    updated["dependency_names_path"] = _normalize_path(dependency_names_path)
+    updated["vendor_names_path"] = _normalize_path(
+        _relativize_path(vendor_names_path, SETTINGS_DIR)
+    )
+    updated["software_names_path"] = _normalize_path(
+        _relativize_path(software_names_path, SETTINGS_DIR)
+    )
+    updated["dependency_names_path"] = _normalize_path(
+        _relativize_path(dependency_names_path, SETTINGS_DIR)
+    )
     updated["vendor_names_repo_url"] = vendor_names_repo_url.strip()
     updated["software_names_repo_url"] = software_names_repo_url.strip()
     updated["dependency_names_repo_url"] = dependency_names_repo_url.strip()
@@ -484,7 +490,7 @@ def _load_settings() -> dict[str, Any]:
 def _get_setting(settings: dict[str, Any], key: str, fallback: Path) -> str:
     value = settings.get(key)
     if isinstance(value, str) and value.strip():
-        return _normalize_path(value.strip())
+        return _normalize_path(_resolve_path(value.strip(), SETTINGS_DIR))
     return _normalize_path(str(fallback))
 
 
@@ -510,3 +516,22 @@ def _is_valid_age(value: str) -> bool:
 
 def _normalize_path(path: str) -> str:
     return path.replace("\\", "/")
+
+
+def _relativize_path(path: str, base_dir: Path) -> str:
+    if not path:
+        return path
+    try:
+        resolved = Path(path).expanduser().resolve()
+        base = base_dir.expanduser().resolve()
+        return str(resolved.relative_to(base))
+    except (OSError, ValueError):
+        return path
+
+
+def _resolve_path(path: str, base_dir: Path) -> str:
+    if not path:
+        return path
+    if "://" in path or Path(path).is_absolute():
+        return path
+    return str((base_dir / path).resolve())
