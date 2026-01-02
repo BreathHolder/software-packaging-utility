@@ -1,5 +1,7 @@
 ﻿# Software Packaging Utilities
 
+![software packaging utility](./images/SPU-Logo-Square-256.png)
+
 A Python application for package managing application source, standardize application storeage, and create reporting for standard adherence.
 
 ## Features

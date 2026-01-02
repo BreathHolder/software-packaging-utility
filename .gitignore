@@ -5,6 +5,7 @@
 
 # Downloaded images
 /images/SPU-Logo*
+!images/SPU-Logo-Square-256.png
 
 # Python cache
 __pycache__/
