@@ -1,4 +1,4 @@
-# Software Packaging Utilities
+﻿# Software Packaging Utilities
 
 A Python application for package managing application source, standardize application storeage, and create reporting for standard adherence.
 
@@ -155,13 +155,14 @@ RETENTION_EXCEPTIONS_ARCHIVE = RETENTION_EXCEPTIONS_DIR / "exception_archive.csv
 software-packaging-utilities/
 ├── src/
 │   ├── __init__.py
-│   ├── main.py                # Application entry point
-│   ├── config.py              # Configuration constants/paths
+│   ├── main.py                          # Application entry point
+│   ├── config.py                        # Configuration constants/paths
 │   └── utils/
 │       ├── __init__,.py
 │       ├── metadata_extractor.py
 │       ├── package_builder.py
 │       ├── package_info_creator.py
+│       ├── package_info_updater.py
 │       ├── package_renamer.py
 │       ├── reporting.py
 │       ├── screen_source_info.py
@@ -176,21 +177,18 @@ software-packaging-utilities/
 │   ├── harness.py
 │   ├── test_metadata.py
 │   ├── test_screen_source_info.py
-│   └── files/
-│       ├── Calibre.Calibre.x64_8_13_0.Matty.msi
-│       ├── Microsoft.Visual_Studio_Code.x64_1_106_3.Matty.exe
-│       └── Piriform_Software.CCleaner.x64.7_1_1066.Matty.exe
+│   └── files/                           # location for test files
 ├── docs/
 │   └── app_requirements.md
 ├── logs/
 │   └── json_edit_requests.log
-├── build/                     # PyInstaller build artifacts
-├── dist/                      # PyInstaller output
-├── app.spec                   # PyInstaller spec
+├── build/                               # PyInstaller build artifacts
+├── dist/                                # PyInstaller output
+├── app.spec                             # PyInstaller spec
 ├── requirements.txt
-├── rocket-gear.ico
-├── LICENSE
-└── README.md
+├── spu-logo.ico                         # SPU Branded Logo
+├── LICENSE                              # MIT License
+└── README.md                            # 👇 This is where you currently are
 ```
 
 ## Development
