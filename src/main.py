@@ -9,6 +9,7 @@ from tkinter import messagebox, ttk
 from src.utils.package_info_creator import build_package_info_creator_frame
 from src.utils.package_info_updater import build_package_info_updater_frame
 from src.utils.settings import build_settings_frame
+from src.utils.dependency_manager import build_dependency_manager_frame
 from src.ui_styles import apply_styles
 
 
@@ -30,6 +31,7 @@ class RibbonApp(tk.Tk):
             "package_info": build_package_info_creator_frame,
             "package_info_update": build_package_info_updater_frame,
             "settings": build_settings_frame,
+            "dependencies": build_dependency_manager_frame,
         }
         self._nav_items: dict[str, dict[str, object]] = {}
         self._active_page_key: str | None = None
@@ -87,6 +89,12 @@ class RibbonApp(tk.Tk):
             key="settings",
             label="Settings",
             command=lambda: self._show_page("settings"),
+        )
+        self._add_ribbon_tab(
+            ribbon,
+            key="dependencies",
+            label="Dependencies",
+            command=lambda: self._show_page("dependencies"),
         )
 
         content = ttk.Frame(container, style="Content.TFrame")

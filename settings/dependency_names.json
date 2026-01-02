@@ -1,10 +1,86 @@
 [
-  "Microsoft .NET Framework",
-  "Microsoft .NET Core",
-  "Generic Java Runtime Environment",
-  "Oracle Java Runtime Environment",
-  "Microsoft PowerShell 5.x",
-  "Microsoft PowerShell 7.x",
-  "ODBC Driver for SQL Server",
-  "JDBC Driver for Oracle Server"
+  {
+    "name": "Microsoft .NET Framework",
+    "path": ""
+  },
+  {
+    "name": "Microsoft .NET Core",
+    "path": ""
+  },
+  {
+    "name": "Generic Java Runtime Environment",
+    "path": ""
+  },
+  {
+    "name": "Oracle Java Runtime Environment",
+    "path": ""
+  },
+  {
+    "name": "Microsoft ASP.NET Core Runtime",
+    "path": ""
+  },
+  {
+    "name": "MySQL Connector/ODBC",
+    "path": ""
+  },
+  {
+    "name": "Microsoft Edge WebView2 Runtime",
+    "path": ""
+  },
+  {
+    "name": "Microsoft PowerShell 5.x",
+    "path": ""
+  },
+  {
+    "name": "Microsoft PowerShell 7.x",
+    "path": ""
+  },
+  {
+    "name": "Microsoft Visual C++ 2015-2022 Redistributable (x64)",
+    "path": ""
+  },
+  {
+    "name": "Microsoft Visual C++ 2015-2022 Redistributable (x86)",
+    "path": ""
+  },
+  {
+    "name": "Microsoft Visual C++ 2013 Redistributable (x64)",
+    "path": ""
+  },
+  {
+    "name": "Microsoft Visual C++ 2013 Redistributable (x86)",
+    "path": ""
+  },
+  {
+    "name": "Microsoft Visual C++ 2010 Redistributable (x64)",
+    "path": ""
+  },
+  {
+    "name": "Microsoft Visual C++ 2010 Redistributable (x86)",
+    "path": ""
+  },
+  {
+    "name": "Node.js",
+    "path": ""
+  },
+  {
+    "name": "ODBC Driver for SQL Server",
+    "path": ""
+  },
+  {
+    "name": "OLE DB Driver for SQL Server",
+    "path": ""
+  },
+  {
+    "name": "PostgreSQL ODBC Driver",
+    "path": ""
+  },
+  {
+    "name": "Python Runtime",
+    "path": ""
+  },
+  {
+    "name": "JDBC Driver for Oracle Server",
+    "path": ""
+  }
 ]

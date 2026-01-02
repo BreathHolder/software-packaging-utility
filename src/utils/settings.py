@@ -585,4 +585,6 @@ def _resolve_path(path: str, base_dir: Path) -> str:
         return path
     if "://" in path or Path(path).is_absolute():
         return path
+    if path.replace("\\", "/").startswith("settings/"):
+        return str((base_dir.parent / path).resolve())
     return str((base_dir / path).resolve())

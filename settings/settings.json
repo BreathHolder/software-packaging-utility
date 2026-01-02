@@ -1,6 +1,6 @@
 {
   "dest_unc_path": "D:/Software_Packaging/Source/Packaging_Pending",
-  "log_level": "info",
+  "log_level": "warn",
   "scan_root": "D:/Software_Packaging/Source/Packaging_Pending",
   "scan_age_days": 30,
   "working_dir": "D:/Software_Packaging/Packaged_Staging/BreathHolder",
@@ -17,9 +17,9 @@
   "content_age_packaged_staging_days": 732,
   "content_age_archive_days": 366,
   "settings_source": "github",
-  "vendor_names_path": "settings/vendor_names.json",
-  "software_names_path": "settings/software_names.json",
-  "dependency_names_path": "settings/dependency_names.json",
+  "vendor_names_path": "vendor_names.json",
+  "software_names_path": "software_names.json",
+  "dependency_names_path": "dependency_names.json",
   "vendor_names_repo_url": "https://raw.githubusercontent.com/BreathHolder/software-packaging-utility/refs/heads/main/settings/vendor_names.json",
   "software_names_repo_url": "https://raw.githubusercontent.com/BreathHolder/software-packaging-utility/refs/heads/main/settings/software_names.json",
   "dependency_names_repo_url": "https://raw.githubusercontent.com/BreathHolder/software-packaging-utility/refs/heads/main/settings/dependency_names.json"

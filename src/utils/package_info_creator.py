@@ -504,7 +504,16 @@ def _load_picklist(path: Path) -> list[str]:
         return []
     if not isinstance(data, list):
         return []
-    options = [str(item).strip() for item in data if str(item).strip()]
+    options = []
+    for item in data:
+        if isinstance(item, dict):
+            name = str(item.get("name", "")).strip()
+            if name:
+                options.append(name)
+        else:
+            value = str(item).strip()
+            if value:
+                options.append(value)
     return sorted(options, key=str.casefold)
 
 
