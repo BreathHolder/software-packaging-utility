@@ -16,7 +16,8 @@ token.pickle
 .env
 
 # IDE files
-.vscode/
+.vscode/*
+!.vscode/tasks.json
 .idea/
 *.swp
 *.swo
