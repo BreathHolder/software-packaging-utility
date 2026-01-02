@@ -14,6 +14,7 @@ from src.config import (
     FILE_PATHS_DEPENDENCY_NAMES,
     FILE_PATHS_SOFTWARE_NAMES,
     FILE_PATHS_VENDOR_NAMES,
+    LOGGING_LEVEL,
     RETENTION_MANUAL_INSTALLS,
     RETENTION_PACKAGED_APPLICATIONS,
     RETENTION_SCAN_REQUESTs,
@@ -111,6 +112,9 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
     )
     content_age_archive_var = tk.StringVar(
         value=str(_get_int_setting(settings, "content_age_archive_days", 0))
+    )
+    log_level_var = tk.StringVar(
+        value=_get_string_setting(settings, "log_level", LOGGING_LEVEL).lower()
     )
 
     def set_dirty(value: bool = True) -> None:
@@ -303,6 +307,23 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
         on_change=mark_dirty,
     )
 
+    logging_group = ttk.LabelFrame(frame, text="Logging", padding=16)
+    logging_group.pack(fill=tk.X, pady=(0, 20))
+    logging_group.columnconfigure(1, weight=1)
+
+    ttk.Label(logging_group, text="Log level", style="Body.TLabel").grid(
+        row=0, column=0, sticky="w", pady=4, padx=(0, 12)
+    )
+    log_level_combo = ttk.Combobox(
+        logging_group,
+        textvariable=log_level_var,
+        values=["debug", "info", "warn", "error"],
+        state="readonly",
+        width=20,
+    )
+    log_level_combo.grid(row=0, column=1, sticky="w", pady=4)
+    log_level_combo.bind("<<ComboboxSelected>>", mark_dirty)
+
     actions = ttk.Frame(frame, style="Content.TFrame")
     actions.pack(fill=tk.X)
     save_button = ttk.Button(
@@ -329,6 +350,7 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
             content_age_packaged_applications_var.get(),
             content_age_packaged_staging_var.get(),
             content_age_archive_var.get(),
+            log_level_var.get(),
             set_dirty,
         ),
     )
@@ -413,6 +435,7 @@ def _save_settings(
     content_age_packaged_applications_days: str,
     content_age_packaged_staging_days: str,
     content_age_archive_days: str,
+    log_level: str,
     set_dirty,
 ) -> None:
     """Validate inputs and persist settings to settings.json.
@@ -472,6 +495,16 @@ def _save_settings(
 
     for key, value in age_fields.items():
         updated[key] = int(value.strip())
+
+    normalized_level = log_level.strip().lower()
+    valid_levels = {"debug", "info", "warn", "error"}
+    if normalized_level not in valid_levels:
+        messagebox.showerror(
+            "Invalid Log Level",
+            "Select one of: debug, info, warn, error.",
+        )
+        return
+    updated["log_level"] = normalized_level
 
     SETTINGS_DIR.mkdir(parents=True, exist_ok=True)
     try:

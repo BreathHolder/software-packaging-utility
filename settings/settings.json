@@ -1,6 +1,6 @@
 {
   "dest_unc_path": "D:/Software_Packaging/Source/Packaging_Pending",
-  "log_level": "Verbose",
+  "log_level": "info",
   "scan_root": "D:/Software_Packaging/Source/Packaging_Pending",
   "scan_age_days": 30,
   "working_dir": "D:/Software_Packaging/Packaged_Staging/BreathHolder",

@@ -7,7 +7,7 @@ A Python application for package managing application source, standardize applic
 - **Configurable Settings**: Configure source/packaging paths, settings file sources, and content age from the Settings tab.
 - **Robust Error Handling**: Comprehensive error handling and logging, with breakouts for distinct error logging and function execution results.
 - **Type Safety**: Ensure type checking to prevent bottle-necked processes.
-- **Testing**: 
+- **Testing**:
 
 ## Prerequisites
 
@@ -229,6 +229,7 @@ flake8 src/ tests/
 ### Common Issues (not built yet)
 
 ## Prerequisites
+
 - Python 3 installed (or use the packaged `app.exe` built with PyInstaller --not implemented yet).
 - No network access required. Logs are written locally in `logs/`.
 
@@ -246,26 +247,33 @@ flake8 src/ tests/
 
 ## Utility 1: PackageInfo.txt File Builder
 
-- **Purpose**: 
+- **Purpose**: Streamlines the creation of `PackageInfo.txt` files, which are essential for standardizing software packaging. This tool provides a user-friendly interface to:
+  - **Automate Metadata Extraction**: Automatically loads an installer file (`.msi`, `.exe`) and extracts key metadata such as software version, architecture, and cryptographic hashes (SHA1/SHA256).
+  - **Standardize Data Entry**: Offers structured fields for manually entering required information, including request details, licensing, software dependencies, and vulnerability scan results.
+  - **Prepare for Packaging**: Optionally creates a standardized folder structure for the package, moving the source installer and the newly generated `PackageInfo.txt` into a dedicated directory.
 
 ## Utility 2: Package Directory Builder
 
-- **Purpose**: 
+- **Purpose**:
 
 ## Utility 3: Settings Management
 
-- **Purpose**: Configure base paths, content age (days), and JSON settings sources (local vs GitHub).
+- **Purpose**: Provides a centralized UI to configure the application's core settings, which are persisted in `settings/settings.json`. This includes:
+  - **Path Configuration**: Define the root paths for software source, packaging, staging, and archives.
+  - **Logging Level**: Set the application's logging verbosity (Debug, Info, Warn, Error).
+  - **Content Retention Policies**: Set the maximum age (in days) for content in different directories before it's flagged for review or cleanup.
+  - **Picklist Source Management**: Choose whether to load picklists (for vendors, software names, etc.) from local `.json` files or from a remote GitHub repository, allowing for centralized management of these lists.
 
 ## Utility 4: Scan & Report Generation
 
 ### Standard Adherence
 
-- **Purpose**: 
+- **Purpose**:
 
 ### Picklist Deviations & Updates
 
-- **Purpose**: 
+- **Purpose**:
 
 ### Package Clean-Up
 
-- **Purpose**: 
+- **Purpose**:
