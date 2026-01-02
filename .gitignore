@@ -4,7 +4,7 @@
 /venv
 
 # Downloaded images
-/images/*
+/images/SPU-Logo*
 
 # Python cache
 __pycache__/
