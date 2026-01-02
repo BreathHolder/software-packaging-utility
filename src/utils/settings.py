@@ -17,7 +17,7 @@ from src.config import (
     LOGGING_LEVEL,
     RETENTION_MANUAL_INSTALLS,
     RETENTION_PACKAGED_APPLICATIONS,
-    RETENTION_SCAN_REQUESTs,
+    RETENTION_SCAN_REQUESTS,
     SOFTWARE_PATHS_ARCHIVE,
     SOFTWARE_PATHS_MANUAL_INSTALLS,
     SOFTWARE_PATHS_PACKAGED,
@@ -93,7 +93,7 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
         value=str(_get_int_setting(settings, "content_age_source_days", 0))
     )
     content_age_scan_requests_var = tk.StringVar(
-        value=str(_get_int_setting(settings, "content_age_scan_requests_days", RETENTION_SCAN_REQUESTs))
+        value=str(_get_int_setting(settings, "content_age_scan_requests_days", RETENTION_SCAN_REQUESTS))
     )
     content_age_manual_installs_var = tk.StringVar(
         value=str(_get_int_setting(settings, "content_age_manual_installs_days", RETENTION_MANUAL_INSTALLS))

@@ -110,7 +110,7 @@ package_root/
 │   └── dependency_management/                  # Parent directory for dependencies that will be copied into individual packaging folders.
 ├── Archive/                                    # Archived content by source/type and retention policy.
 │   ├── Manual_Installs/                        # Source apps older than $retention_manual_installs days.
-│   ├── Scan_Requests/                          # Source scan requests older than $retention_scan_requests days.
+│   ├── Scan_Requests/                          # Source scan requests older than $RETENTION_SCAN_REQUESTS days.
 │   └── Packaged_Applications/                  # Packaged apps older than $retention_packaged_apps days.
 ```
 
