@@ -5,19 +5,21 @@ The following are a set of features used to standardize software packaging and r
 ## Features & Priorities
 
 - [ ] Settings
-  - [ ] Retention Period Configurations (days)
-    - [ ] Scan Requests
-    - [ ] Manual Installs
-    - [ ] Packaged Applications
-  - [ ] Configuration File Paths
-    - [ ] Vendor Names
-    - [ ] Software Names
-  - [ ] Software Paths
-    - [ ] Source
-    - [ ] Packaged
-    - [ ] Staging
-    - [ ] Archive
-  - [ ] Logging Level
+  - [X] Retention Period Configurations (days)
+    - [X] Scan Requests
+    - [X] Manual Installs
+    - [X] Packaged Applications
+    - [X] Packaged Staging
+    - [X] Archive
+  - [X] Configuration File Paths
+    - [X] Vendor Names
+    - [X] Software Names
+  - [X] Software Paths
+    - [X] Source
+    - [X] Packaged
+    - [X] Staging
+    - [X] Archive
+  - [X] Logging Level
 - [ ] Source to Package Staging Buildout
   - [ ] Directory Structure Build
   - [ ] File Creations
