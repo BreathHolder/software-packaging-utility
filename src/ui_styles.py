@@ -13,7 +13,13 @@ def apply_styles(app: tk.Tk) -> dict[str, str]:
     on the host OS and that this runs before widgets are created.
     """
     style = ttk.Style(app)
-    style.theme_use("vista")
+    themes = style.theme_names()
+    if "vista" in themes:
+        style.theme_use("vista")
+    elif "clam" in themes:
+        style.theme_use("clam")
+    else:
+        style.theme_use(themes[0])
     style.configure("App.TFrame", background="#f7f3ee")
     style.configure("Ribbon.TFrame", background="#1f2a36")
     style.configure("RibbonTitle.TLabel", background="#1f2a36", foreground="#e8edf2")

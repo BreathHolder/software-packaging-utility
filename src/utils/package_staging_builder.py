@@ -407,6 +407,7 @@ def _create_staging_package(
     )
 
     missing_total: set[str] = set()
+    email_failures: list[Path] = []
     for area in business_areas:
         version_arch_lob = _sanitize_folder_name(
             f"{software_version}_{software_architecture}_{area}"
@@ -445,6 +446,15 @@ def _create_staging_package(
             return
 
         try:
+            email_content = _build_staging_email_content(
+                package_info_values,
+                updated_text,
+            )
+            (target_root / "Packaging_Stage_Email.txt").write_text(email_content, encoding="utf-8")
+        except OSError:
+            email_failures.append(target_root)
+
+        try:
             (dependencies_dir / "dependencies.txt").write_text(
                 _format_dependencies_for_file(dependencies_value),
                 encoding="utf-8",
@@ -466,6 +476,12 @@ def _create_staging_package(
             "These dependencies do not have valid paths:\n"
             + "\n".join(sorted(missing_total)),
         )
+    if email_failures:
+        messagebox.showwarning(
+            "Email Template Not Saved",
+            "Could not save Packaging_Stage_Email.txt in:\n"
+            + "\n".join(str(path) for path in email_failures),
+        )
 
     scan_status = package_info_values.get(
         "Software Vulnerability Scan Results Status",
@@ -480,6 +496,11 @@ def _create_staging_package(
         "Package Staging Created",
         f"Created staging package:\n{target_root}",
     )
+    if os.name == "nt":
+        try:
+            os.startfile(target_root)  # type: ignore[attr-defined]
+        except OSError:
+            pass
     set_dirty(False)
 
 
@@ -509,6 +530,47 @@ def _format_dependencies_for_file(dependencies_value: str) -> str:
     if dependencies_value.strip() == "No dependencies":
         return "No dependencies"
     return "\n".join([item.strip() for item in dependencies_value.split(",") if item.strip()])
+
+
+def _build_staging_email_content(
+    package_info_values: dict[str, str],
+    package_info_text: str,
+) -> str:
+    """Build a preformatted staging notification email body."""
+    request_id = package_info_values.get("Request ID", "").strip() or "Unknown Request ID"
+    requestor = package_info_values.get("Requestor Name", "").strip() or "Requestor"
+    tech_owner = package_info_values.get("Software Technology Owner ID", "").strip() or "Technology Owner"
+    vendor = package_info_values.get("Software Vendor", "").strip() or "Unknown Vendor"
+    software = package_info_values.get("Software Name", "").strip() or "Unknown Software"
+    version = package_info_values.get("Software Version", "").strip() or "Unknown Version"
+    architecture = package_info_values.get("Software Architecture", "").strip() or "Unknown Architecture"
+
+    subject = f"Packaging Request {request_id} - Now In Packaging Stage"
+    greeting = f"Hello {requestor} and {tech_owner},"
+    body_lines = [
+        "Your request has moved from Prep to Packaging and is now in the packaging stage.",
+        "We will begin the packaging work shortly. If you have updates or questions, please reply to this email.",
+        "",
+        f"Request ID: {request_id}",
+        f"Software: {vendor} {software} {version} ({architecture})",
+        "",
+        "Below is the current PackageInfo.txt content for reference.",
+    ]
+
+    return "\n".join(
+        [
+            f"To: {requestor}; {tech_owner}",
+            f"Subject: {subject}",
+            "",
+            greeting,
+            "",
+            *body_lines,
+            "",
+            "----- PackageInfo.txt -----",
+            package_info_text.strip(),
+            "",
+        ]
+    )
 
 
 def _copy_dependency_assets(

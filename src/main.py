@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import ctypes
+import os
 import tkinter as tk
 from pathlib import Path
 from tkinter import messagebox, ttk
@@ -11,6 +13,7 @@ from src.utils.package_info_updater import build_package_info_updater_frame
 from src.utils.package_staging_builder import build_package_staging_frame
 from src.utils.package_documentation_builder import build_package_documentation_frame
 from src.utils.package_publisher import build_package_publisher_frame
+from src.utils.reporting import build_reporting_frame
 from src.utils.settings import build_settings_frame
 from src.utils.dependency_manager import build_dependency_manager_frame
 from src.ui_styles import apply_styles
@@ -36,6 +39,7 @@ class RibbonApp(tk.Tk):
             "package_staging": build_package_staging_frame,
             "package_docs": build_package_documentation_frame,
             "package_publish": build_package_publisher_frame,
+            "reporting": build_reporting_frame,
             "settings": build_settings_frame,
             "dependencies": build_dependency_manager_frame,
         }
@@ -49,7 +53,20 @@ class RibbonApp(tk.Tk):
         """Load window and ribbon branding images."""
         repo_root = Path(__file__).resolve().parents[1]
         icon_path = repo_root / "images" / "SPU-Logo-Square-32.png"
+        icon_ico_path = repo_root / "SPU-Logo-App.ico"
         menu_logo_path = repo_root / "images" / "SPU-Logo-Square-128.png"
+
+        if os.name == "nt" and icon_ico_path.exists():
+            try:
+                ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(
+                    "SoftwarePackagingUtilities"
+                )
+            except OSError:
+                pass
+            try:
+                self.iconbitmap(str(icon_ico_path))
+            except tk.TclError:
+                pass
 
         if icon_path.exists():
             self._app_icon = tk.PhotoImage(file=str(icon_path))
@@ -107,6 +124,12 @@ class RibbonApp(tk.Tk):
             key="package_publish",
             label="Publish Package",
             command=lambda: self._show_page("package_publish"),
+        )
+        self._add_ribbon_tab(
+            ribbon,
+            key="reporting",
+            label="Reporting",
+            command=lambda: self._show_page("reporting"),
         )
         self._add_ribbon_tab(
             ribbon,

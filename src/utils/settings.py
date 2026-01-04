@@ -10,6 +10,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
 from src.config import (
+    REPORTS_DIR,
     SETTINGS_DIR,
     FILE_PATHS_DEPENDENCY_NAMES,
     FILE_PATHS_SOFTWARE_NAMES,
@@ -93,6 +94,9 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
     dependency_names_repo_var = tk.StringVar(
         value=_get_string_setting(settings, "dependency_names_repo_url", "")
     )
+    reports_output_var = tk.StringVar(
+        value=_get_setting(settings, "reports_output_path", REPORTS_DIR)
+    )
     content_age_source_var = tk.StringVar(
         value=str(_get_int_setting(settings, "content_age_source_days", 0))
     )
@@ -119,6 +123,9 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
     )
     log_level_var = tk.StringVar(
         value=_get_string_setting(settings, "log_level", LOGGING_LEVEL).lower()
+    )
+    log_size_limit_var = tk.StringVar(
+        value=str(_get_int_setting(settings, "log_size_limit_mb", 5))
     )
 
     def set_dirty(value: bool = True) -> None:
@@ -195,6 +202,14 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
         row=6,
         label="Archive",
         variable=archive_var,
+        browse=True,
+        on_change=mark_dirty,
+    )
+    _add_path_row(
+        group,
+        row=7,
+        label="Reports_Output",
+        variable=reports_output_var,
         browse=True,
         on_change=mark_dirty,
     )
@@ -336,6 +351,14 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
     log_level_combo.grid(row=0, column=1, sticky="w", pady=4)
     log_level_combo.bind("<<ComboboxSelected>>", mark_dirty)
 
+    _add_text_row(
+        logging_group,
+        row=1,
+        label="Log size limit (MB)",
+        variable=log_size_limit_var,
+        on_change=mark_dirty,
+    )
+
     actions = ttk.Frame(frame, style="Content.TFrame")
     actions.pack(fill=tk.X)
     save_button = ttk.Button(
@@ -350,6 +373,7 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
             package_prep_var.get(),
             staging_var.get(),
             archive_var.get(),
+            reports_output_var.get(),
             settings_source_var.get(),
             vendor_names_local_var.get(),
             software_names_local_var.get(),
@@ -364,6 +388,7 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
             content_age_packaged_staging_var.get(),
             content_age_archive_var.get(),
             log_level_var.get(),
+            log_size_limit_var.get(),
             set_dirty,
         ),
     )
@@ -436,6 +461,7 @@ def _save_settings(
     package_prep_path: str,
     staging_path: str,
     archive_path: str,
+    reports_output_path: str,
     settings_source: str,
     vendor_names_path: str,
     software_names_path: str,
@@ -450,6 +476,7 @@ def _save_settings(
     content_age_packaged_staging_days: str,
     content_age_archive_days: str,
     log_level: str,
+    log_size_limit_mb: str,
     set_dirty,
 ) -> None:
     """Validate inputs and persist settings to settings.json.
@@ -479,6 +506,7 @@ def _save_settings(
     updated["package_prep_path"] = _normalize_path(package_prep_path)
     updated["package_staging_path"] = _normalize_path(staging_path)
     updated["archive_path"] = _normalize_path(archive_path)
+    updated["reports_output_path"] = _normalize_path(reports_output_path)
     updated["settings_source"] = settings_source.strip() or "local"
     updated["vendor_names_path"] = _normalize_path(
         _relativize_path(vendor_names_path, SETTINGS_DIR)
@@ -521,6 +549,14 @@ def _save_settings(
         )
         return
     updated["log_level"] = normalized_level
+
+    if not _is_valid_log_size(log_size_limit_mb):
+        messagebox.showerror(
+            "Invalid Log Size",
+            "Enter a whole number greater than 0 for log size limit (MB).",
+        )
+        return
+    updated["log_size_limit_mb"] = int(log_size_limit_mb.strip())
 
     SETTINGS_DIR.mkdir(parents=True, exist_ok=True)
     try:
@@ -576,6 +612,12 @@ def _get_int_setting(settings: dict[str, Any], key: str, fallback: int) -> int:
 def _is_valid_age(value: str) -> bool:
     """Return True when the content age field is a whole number string."""
     return bool(value.strip()) and value.strip().isdigit()
+
+
+def _is_valid_log_size(value: str) -> bool:
+    """Return True when the log size field is a positive whole number."""
+    stripped = value.strip()
+    return stripped.isdigit() and int(stripped) > 0
 
 
 def _normalize_path(path: str) -> str:

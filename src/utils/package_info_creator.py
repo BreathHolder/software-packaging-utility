@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import os
+import socket
 import shutil
 from datetime import datetime
 from pathlib import Path
@@ -20,6 +22,7 @@ from src.config import (
     SETTINGS_DIR,
     SOFTWARE_PATHS_PACKAGE_PREP,
 )
+from src.utils.logging_utils import append_text_log
 from src.utils.metadata_extractor import (
     InstallerMetadata,
     UNKNOWN_VALUE,
@@ -599,7 +602,6 @@ def _log_picklist_addition_request(
     source_path: str,
 ) -> None:
     """Log a request to add a value to a picklist JSON file."""
-    LOGGING_DIR.mkdir(parents=True, exist_ok=True)
     log_path = LOGGING_DIR / "json_edit_requests.log"
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     vendor = metadata.vendor_name if metadata else UNKNOWN_VALUE
@@ -612,8 +614,7 @@ def _log_picklist_addition_request(
         f"source={source} | vendor={vendor} | software={software} | "
         f"version={version} | arch={arch}"
     )
-    with log_path.open("a", encoding="utf-8") as handle:
-        handle.write(f"{line}\n")
+    append_text_log(log_path, line)
 
 
 def _log_freeform_entry(
@@ -627,7 +628,6 @@ def _log_freeform_entry(
     software_architecture: str = UNKNOWN_VALUE,
 ) -> None:
     """Log any freeform field additions for downstream review."""
-    LOGGING_DIR.mkdir(parents=True, exist_ok=True)
     log_path = LOGGING_DIR / "middleware_edit_requests.log"
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     vendor = metadata.vendor_name if metadata else vendor_name
@@ -640,8 +640,7 @@ def _log_freeform_entry(
         f"source={source} | vendor={vendor} | software={software} | "
         f"version={version} | arch={arch}"
     )
-    with log_path.open("a", encoding="utf-8") as handle:
-        handle.write(f"{line}\n")
+    append_text_log(log_path, line)
 
 
 def _generate_package_info(
@@ -737,6 +736,9 @@ def _generate_package_info(
         software_version,
         software_architecture,
     )
+    change_date, change_analyst_id, change_analyst_name = _resolve_change_analyst_fields(
+        existing_package_info_path
+    )
     content = _build_package_info_content(
         manual_values=manual_values,
         vendor_name=vendor_name,
@@ -745,6 +747,9 @@ def _generate_package_info(
         software_architecture=software_architecture,
         sha1_hash=sha1_hash,
         sha256_hash=sha256_hash,
+        change_date=change_date,
+        change_analyst_id=change_analyst_id,
+        change_analyst_name=change_analyst_name,
     )
 
     try:
@@ -808,12 +813,26 @@ def _build_package_info_content(
     software_architecture: str,
     sha1_hash: str,
     sha256_hash: str,
+    change_date: str = "",
+    change_analyst_id: str = "",
+    change_analyst_name: str = "",
 ) -> str:
     """Build the PackageInfo.txt body, including a scan-details block."""
     scan_details = manual_values.get("Software Vulnerability Scan Results Details", "").strip()
     lines = [
         f"Request ID: {manual_values.get('Request ID', '')}",
         f"Requestor Name: {manual_values.get('Requestor Name', '')}",
+    ]
+    if change_date or change_analyst_id or change_analyst_name:
+        lines.extend(
+            [
+                f"Change Date: {change_date}",
+                f"Change Analyst ID: {change_analyst_id}",
+                f"Change Analyst Name: {change_analyst_name}",
+            ]
+        )
+    lines.extend(
+        [
         f"Software Reference ID: {manual_values.get('Software Reference ID', '')}",
         f"Software Technology Owner ID: {manual_values.get('Software Technology Owner ID', '')}",
         f"Licensed Software Flag: {manual_values.get('Licensed Software Flag', '')}",
@@ -826,7 +845,8 @@ def _build_package_info_content(
         f"Software SHA256 Hash: {sha256_hash}",
         f"Software Dependencies: {manual_values.get('Software Dependencies', '')}",
         f"Software Vulnerability Scan Results Status: {manual_values.get('Software Vulnerability Scan Results Status', '')}",
-    ]
+        ]
+    )
     lines.append("##Software Vulnerability Scan Results Details Begin##")
     if scan_details:
         lines.extend(scan_details.splitlines())
@@ -1148,6 +1168,46 @@ def _toggle_no_dependencies(
         listbox.configure(state="normal")
         if other_check is not None:
             other_check.configure(state="normal")
+
+
+def _resolve_change_analyst_fields(
+    existing_package_info_path: Optional[Path],
+) -> tuple[str, str, str]:
+    """Return change analyst fields for new PackageInfo.txt creation."""
+    if existing_package_info_path:
+        try:
+            values = parse_package_info_file(existing_package_info_path)
+        except OSError:
+            values = {}
+        change_date = values.get("Change Date", "").strip()
+        change_id = values.get("Change Analyst ID", "").strip()
+        change_name = values.get("Change Analyst Name", "").strip()
+        return change_date, change_id, change_name
+
+    change_date = datetime.now().strftime("%m/%d/%Y")
+    change_id = _get_netbios_name()
+    change_name = _get_display_name(change_id)
+    return change_date, change_id, change_name
+
+
+def _get_netbios_name() -> str:
+    """Return the user's NetBIOS/user name."""
+    user_name = os.environ.get("USERNAME")
+    if user_name:
+        return user_name
+    try:
+        return os.getlogin()
+    except OSError:
+        return socket.gethostname() or UNKNOWN_VALUE
+
+
+def _get_display_name(fallback: str) -> str:
+    """Return a display name for the logged-in user."""
+    for key in ("USERDISPLAYNAME", "DISPLAYNAME", "FULLNAME", "NAME"):
+        value = os.environ.get(key)
+        if value:
+            return value
+    return fallback
 
 
 def _attach_tooltip(widget: tk.Widget, text: str) -> None:

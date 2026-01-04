@@ -20,6 +20,7 @@ from src.config import (
     LOGGING_DIR,
 )
 from src.utils.metadata_extractor import InstallerMetadata, UNKNOWN_VALUE
+from src.utils.logging_utils import append_text_log
 
 
 class SourceInfoScreen:
@@ -259,7 +260,6 @@ def _log_picklist_addition_request(
     metadata: InstallerMetadata,
 ) -> None:
     """Log a request to add a value to a picklist JSON file."""
-    LOGGING_DIR.mkdir(parents=True, exist_ok=True)
     log_path = LOGGING_DIR / "json_edit_requests.log"
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     line = (
@@ -268,5 +268,4 @@ def _log_picklist_addition_request(
         f"software={metadata.software_name} | version={metadata.software_version} | "
         f"arch={metadata.software_architecture}"
     )
-    with log_path.open("a", encoding="utf-8") as handle:
-        handle.write(f"{line}\n")
+    append_text_log(log_path, line)

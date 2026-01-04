@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import csv
 import json
 from datetime import datetime
 from pathlib import Path
@@ -12,6 +11,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
 from src.config import FILE_PATHS_DEPENDENCY_NAMES, LOGGING_DIR, SETTINGS_DIR
+from src.utils.logging_utils import append_csv_log
 
 
 def build_dependency_manager_frame(parent: tk.Widget) -> ttk.Frame:
@@ -304,32 +304,26 @@ def _log_dependency_change(
     previous_path: str,
 ) -> None:
     """Append dependency changes to a CSV log for review."""
-    LOGGING_DIR.mkdir(parents=True, exist_ok=True)
     log_path = LOGGING_DIR / "dependency_changes.csv"
-    write_header = not log_path.exists()
-    with log_path.open("a", encoding="utf-8", newline="") as handle:
-        writer = csv.writer(handle)
-        if write_header:
-            writer.writerow(
-                [
-                    "timestamp",
-                    "action",
-                    "name",
-                    "path",
-                    "previous_name",
-                    "previous_path",
-                ]
-            )
-        writer.writerow(
-            [
-                datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                action,
-                name,
-                path_value,
-                previous_name,
-                previous_path,
-            ]
-        )
+    append_csv_log(
+        log_path,
+        header=[
+            "timestamp",
+            "action",
+            "name",
+            "path",
+            "previous_name",
+            "previous_path",
+        ],
+        row=[
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            action,
+            name,
+            path_value,
+            previous_name,
+            previous_path,
+        ],
+    )
 
 
 def _resolve_path(path: str, base_dir: Path) -> Path:

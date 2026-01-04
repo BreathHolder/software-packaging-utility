@@ -21,14 +21,14 @@ The following are a set of features used to standardize software packaging and r
     - [X] Archive
   - [X] Logging Level
   - [ ] Log Management & Rolling
-- [ ] Dependency Management
-  - [ ] Dependency Picklist
-  - [ ] Dependency Details: Name & Path Updates
-- [ ] Source to Package Staging Buildout
-  - [ ] Directory Structure Build
-  - [ ] File Creations
-  - [ ] Email Notification to Technology Owner and Requestor
-- [ ] Package Staging to Packaged Applications Buildout
+- [X] Dependency Management
+  - [X] Dependency Picklist
+  - [X] Dependency Details: Name & Path Updates
+- [X] Source to Package Staging Buildout
+  - [X] Directory Structure Build
+  - [X] File Creations
+  - [X] Email Notification to Technology Owner and Requestor
+- [X] Package Staging to Packaged Applications Buildout
 - [X] PackageInfo file Creator
   - [X] Request Info Inclusion
   - [X] Technology Owner Info Inclusion
@@ -38,9 +38,9 @@ The following are a set of features used to standardize software packaging and r
   - [X] Dependency Info Inclusion
 - [X] PackageInfo file Updater
 - [ ] Reporting
-  - [ ] Scan Requests
-  - [ ] Manual Installs
-  - [ ] Packaged Applications
+  - [X] Scan Requests
+  - [X] Manual Installs
+  - [X] Packaged Applications
 
 ## Settings
 

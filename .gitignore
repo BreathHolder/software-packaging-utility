@@ -31,5 +31,6 @@ Thumbs.db
 *.exe
 *.msi
 
-# Logs
+# Logs & Reports
 /logs/*
+/reports/*
