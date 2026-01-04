@@ -90,6 +90,7 @@ package_root/
 │                   ├── Readme.txt              # Text file containing instructions for install.
 │                   └── Request_Info.txt        # Includes RITM or official scan results.
 ├── Packaged_Applications/                      # Official packaged applications.
+│   └── dependency_management/                  # Parent directory for dependencies that will be copied into individual packaging folders.
 │   └── vendor_name/                            # Directory name should match the vendor name.
 │       └── software_name/                      # Directory name should match the software name.
 │           └── version_architecture_LOB/       # Directory name should match the software version, architecture, and LOB.
@@ -107,7 +108,6 @@ package_root/
 │               ├── prefetch.txt                # Prefetch data file generated from a script, denoting the Artifactory file path for the official package.
 │               └── Request_Info.txt            # Request metadata for this packaged app.
 ├── Packaged_Staging/                           # Working area for building packages.
-│   └── dependency_management/                  # Parent directory for dependencies that will be copied into individual packaging folders.
 ├── Archive/                                    # Archived content by source/type and retention policy.
 │   ├── Manual_Installs/                        # Source apps older than $retention_manual_installs days.
 │   ├── Scan_Requests/                          # Source scan requests older than $RETENTION_SCAN_REQUESTS days.
