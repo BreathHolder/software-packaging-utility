@@ -1,0 +1,12 @@
+timestamp,action,name,path,previous_name,previous_path
+2026-01-03 19:36:26,update,Microsoft ASP.NET Core Runtime x86,D:\Software_Packaging\Source\Manual_Installs\App_Dependencies\dotnet-sdk-10.0.101-win-x86.exe,Microsoft ASP.NET Core Runtime,
+2026-01-03 19:36:45,add,Microsoft ASP.NET Core Runtime x64,D:\Software_Packaging\Source\Manual_Installs\App_Dependencies\dotnet-sdk-10.0.101-win-x64.exe,,
+2026-01-03 19:43:13,update,Microsoft .NET Core Runtime x64,D:\Software_Packaging\Source\Manual_Installs\App_Dependencies\dotnet-sdk-10.0.101-win-x64.exe,Microsoft ASP.NET Core Runtime x64,D:\Software_Packaging\Source\Manual_Installs\App_Dependencies\dotnet-sdk-10.0.101-win-x64.exe
+2026-01-03 19:43:18,update,Microsoft .NET Core Runtime x86,D:\Software_Packaging\Source\Manual_Installs\App_Dependencies\dotnet-sdk-10.0.101-win-x86.exe,Microsoft ASP.NET Core Runtime x86,D:\Software_Packaging\Source\Manual_Installs\App_Dependencies\dotnet-sdk-10.0.101-win-x86.exe
+2026-01-03 19:43:22,delete,Microsoft .NET Core,,Microsoft .NET Core,
+2026-01-03 19:43:32,delete,Microsoft PowerShell 5.x,,Microsoft PowerShell 5.x,
+2026-01-03 19:44:31,update,Microsoft PowerShell 7.x x64,D:\Software_Packaging\Source\Manual_Installs\App_Dependencies\PowerShell-7.5.4-win-x64.msi,Microsoft PowerShell 7.x,
+2026-01-03 19:44:40,add,Microsoft PowerShell 7.x x86,D:\Software_Packaging\Source\Manual_Installs\App_Dependencies\PowerShell-7.5.4-win-x86.msi,,
+2026-01-03 19:47:02,update,Python Runtime,D:\Software_Packaging\Source\Manual_Installs\App_Dependencies\python-manager-25.2.msix,Python Runtime,
+2026-01-03 19:49:42,update,OLE DB Driver for SQL Server x86,D:\Software_Packaging\Source\Manual_Installs\App_Dependencies\msoledbsql-x86.msi,OLE DB Driver for SQL Server,
+2026-01-03 19:49:52,update,OLE DB Driver for SQL Server x64,D:\Software_Packaging\Source\Manual_Installs\App_Dependencies\msoledbsql-x64.msi,OLE DB Driver for SQL Server x86,D:\Software_Packaging\Source\Manual_Installs\App_Dependencies\msoledbsql-x86.msi
