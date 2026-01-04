@@ -8,6 +8,7 @@ from tkinter import messagebox, ttk
 
 from src.utils.package_info_creator import build_package_info_creator_frame
 from src.utils.package_info_updater import build_package_info_updater_frame
+from src.utils.package_staging_builder import build_package_staging_frame
 from src.utils.settings import build_settings_frame
 from src.utils.dependency_manager import build_dependency_manager_frame
 from src.ui_styles import apply_styles
@@ -30,6 +31,7 @@ class RibbonApp(tk.Tk):
         self._pages = {
             "package_info": build_package_info_creator_frame,
             "package_info_update": build_package_info_updater_frame,
+            "package_staging": build_package_staging_frame,
             "settings": build_settings_frame,
             "dependencies": build_dependency_manager_frame,
         }
@@ -86,15 +88,21 @@ class RibbonApp(tk.Tk):
         )
         self._add_ribbon_tab(
             ribbon,
-            key="settings",
-            label="Settings",
-            command=lambda: self._show_page("settings"),
+            key="package_staging",
+            label="Package Staging Builder",
+            command=lambda: self._show_page("package_staging"),
         )
         self._add_ribbon_tab(
             ribbon,
             key="dependencies",
-            label="Dependencies",
+            label="Dependency Manager",
             command=lambda: self._show_page("dependencies"),
+        )
+        self._add_ribbon_tab(
+            ribbon,
+            key="settings",
+            label="Settings",
+            command=lambda: self._show_page("settings"),
         )
 
         content = ttk.Frame(container, style="Content.TFrame")
