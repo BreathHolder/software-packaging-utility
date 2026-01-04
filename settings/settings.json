@@ -10,6 +10,7 @@
   "packaged_applications_path": "D:/Software_Packaging/Packaged_Applications",
   "package_staging_path": "D:/Software_Packaging/Package_Staging",
   "archive_path": "D:/Software_Packaging/Archive",
+  "package_prep_path": "D:/Software_Packaging/Package_Prep",
   "content_age_source_days": 0,
   "content_age_scan_requests_days": 30,
   "content_age_manual_installs_days": 180,
@@ -22,6 +23,5 @@
   "dependency_names_path": "dependency_names.json",
   "vendor_names_repo_url": "https://raw.githubusercontent.com/BreathHolder/software-packaging-utility/refs/heads/main/settings/vendor_names.json",
   "software_names_repo_url": "https://raw.githubusercontent.com/BreathHolder/software-packaging-utility/refs/heads/main/settings/software_names.json",
-  "dependency_names_repo_url": "https://raw.githubusercontent.com/BreathHolder/software-packaging-utility/refs/heads/main/settings/dependency_names.json",
-  "package_prep_path": "D:/Software_Packaging/Package_Prep"
+  "dependency_names_repo_url": "https://raw.githubusercontent.com/BreathHolder/software-packaging-utility/refs/heads/main/settings/dependency_names.json"
 }
