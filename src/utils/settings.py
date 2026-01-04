@@ -20,6 +20,7 @@ from src.config import (
     RETENTION_SCAN_REQUESTS,
     SOFTWARE_PATHS_ARCHIVE,
     SOFTWARE_PATHS_MANUAL_INSTALLS,
+    SOFTWARE_PATHS_PACKAGE_PREP,
     SOFTWARE_PATHS_PACKAGED,
     SOFTWARE_PATHS_SCAN_REQUESTS,
     SOFTWARE_PATHS_SOURCE,
@@ -62,8 +63,11 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
     packaged_var = tk.StringVar(
         value=_get_setting(settings, "packaged_applications_path", SOFTWARE_PATHS_PACKAGED)
     )
+    package_prep_var = tk.StringVar(
+        value=_get_setting(settings, "package_prep_path", SOFTWARE_PATHS_PACKAGE_PREP)
+    )
     staging_var = tk.StringVar(
-        value=_get_setting(settings, "packaged_staging_path", SOFTWARE_PATHS_STAGING)
+        value=_get_setting(settings, "package_staging_path", SOFTWARE_PATHS_STAGING)
     )
     archive_var = tk.StringVar(
         value=_get_setting(settings, "archive_path", SOFTWARE_PATHS_ARCHIVE)
@@ -173,6 +177,14 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
     _add_path_row(
         group,
         row=4,
+        label="Package_Prep",
+        variable=package_prep_var,
+        browse=True,
+        on_change=mark_dirty,
+    )
+    _add_path_row(
+        group,
+        row=5,
         label="Packaged_Staging",
         variable=staging_var,
         browse=True,
@@ -180,7 +192,7 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
     )
     _add_path_row(
         group,
-        row=5,
+        row=6,
         label="Archive",
         variable=archive_var,
         browse=True,
@@ -335,6 +347,7 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
             scan_requests_var.get(),
             manual_installs_var.get(),
             packaged_var.get(),
+            package_prep_var.get(),
             staging_var.get(),
             archive_var.get(),
             settings_source_var.get(),
@@ -420,6 +433,7 @@ def _save_settings(
     scan_requests_path: str,
     manual_installs_path: str,
     packaged_path: str,
+    package_prep_path: str,
     staging_path: str,
     archive_path: str,
     settings_source: str,
@@ -445,6 +459,7 @@ def _save_settings(
     required = {
         "Source": source_path,
         "Packaged_Applications": packaged_path,
+        "Package_Prep": package_prep_path,
         "Packaged_Staging": staging_path,
         "Archive": archive_path,
     }
@@ -461,7 +476,8 @@ def _save_settings(
     updated["scan_requests_path"] = _normalize_path(scan_requests_path)
     updated["manual_installs_path"] = _normalize_path(manual_installs_path)
     updated["packaged_applications_path"] = _normalize_path(packaged_path)
-    updated["packaged_staging_path"] = _normalize_path(staging_path)
+    updated["package_prep_path"] = _normalize_path(package_prep_path)
+    updated["package_staging_path"] = _normalize_path(staging_path)
     updated["archive_path"] = _normalize_path(archive_path)
     updated["settings_source"] = settings_source.strip() or "local"
     updated["vendor_names_path"] = _normalize_path(
