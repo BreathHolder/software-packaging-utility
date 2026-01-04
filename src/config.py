@@ -39,7 +39,7 @@ SOFTWARE_PATHS_SOURCE = Path("D:/Software_Packaging/Source")
 SOFTWARE_PATHS_SCAN_REQUESTS = SOFTWARE_PATHS_SOURCE / "Scan_Requests"
 SOFTWARE_PATHS_MANUAL_INSTALLS = SOFTWARE_PATHS_SOURCE / "Manual_Installs"
 SOFTWARE_PATHS_PACKAGED = Path("D:/Software_Packaging/Packaged_Applications")
-SOFTWARE_PATHS_STAGING = Path("D:/Software_Packaging/Packaged_Staging")
+SOFTWARE_PATHS_STAGING = Path("D:/Software_Packaging/Package_Staging")
 SOFTWARE_PATHS_PACKAGE_PREP = Path("D:/Software_Packaging/Package_Prep")
 SOFTWARE_PATHS_PENDING_PROJECT_APPROVAL = Path(
     "D:/Software_Packaging/Pending_Project_Approval"

@@ -30,3 +30,6 @@ Thumbs.db
 # Executable files
 *.exe
 *.msi
+
+# Logs
+/logs/*

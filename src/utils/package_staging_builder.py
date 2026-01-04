@@ -235,6 +235,13 @@ def build_package_staging_frame(parent: tk.Widget) -> ttk.Frame:
 
     actions = ttk.Frame(frame, style="Content.TFrame")
     actions.pack(fill=tk.X)
+    flat_build_var = tk.BooleanVar(value=False)
+    flat_build_check = ttk.Checkbutton(
+        actions,
+        text="Flat Files for Build Package",
+        variable=flat_build_var,
+    )
+    flat_build_check.pack(side=tk.LEFT)
     create_button = ttk.Button(
         actions,
         text="Create Package in Staging",
@@ -244,6 +251,7 @@ def build_package_staging_frame(parent: tk.Widget) -> ttk.Frame:
             package_info_values,
             dependency_entries,
             dependencies_widget,
+            flat_build_var.get(),
             set_dirty,
         ),
     )
@@ -346,6 +354,7 @@ def _create_staging_package(
     package_info_values: dict[str, str],
     dependency_entries: dict[str, str],
     dependencies_widget: dict[str, Any],
+    flat_build: bool,
     set_dirty,
 ) -> None:
     """Build the staging directory structure with provided inputs."""
@@ -414,14 +423,17 @@ def _create_staging_package(
                 return
 
         try:
-            build_files_dir.mkdir(parents=True, exist_ok=True)
+            target_root.mkdir(parents=True, exist_ok=True)
+            if not flat_build:
+                build_files_dir.mkdir(parents=True, exist_ok=True)
             dependencies_dir.mkdir(parents=True, exist_ok=True)
         except OSError as exc:
             messagebox.showerror("Create Failed", f"Could not create staging directories:\n{exc}")
             return
 
         try:
-            shutil.copy2(installer_path, build_files_dir / installer_path.name)
+            install_target = target_root if flat_build else build_files_dir
+            shutil.copy2(installer_path, install_target / installer_path.name)
         except OSError as exc:
             messagebox.showerror("Copy Failed", f"Could not copy installer:\n{exc}")
             return
@@ -453,6 +465,16 @@ def _create_staging_package(
             "Missing Dependency Files",
             "These dependencies do not have valid paths:\n"
             + "\n".join(sorted(missing_total)),
+        )
+
+    scan_status = package_info_values.get(
+        "Software Vulnerability Scan Results Status",
+        "",
+    ).strip()
+    if scan_status == "Scan results NOT found or vulnerabilities found NOT accepted":
+        messagebox.showwarning(
+            "Packaging Not Authorized",
+            "Not authorized for packaging without a clean or accepted scan.",
         )
     messagebox.showinfo(
         "Package Staging Created",
@@ -703,7 +725,7 @@ def _get_dependency_names_path() -> Path:
 
 
 def _get_package_staging_path() -> Path:
-    """Resolve the Packaged_Staging path from settings.json."""
+    """Resolve the Package_Staging path from settings.json."""
     settings_path = SETTINGS_DIR / "settings.json"
     try:
         raw = settings_path.read_text(encoding="utf-8")

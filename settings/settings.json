@@ -3,7 +3,7 @@
   "log_level": "warn",
   "scan_root": "D:/Software_Packaging/Source/Packaging_Pending",
   "scan_age_days": 30,
-  "working_dir": "D:/Software_Packaging/Packaged_Staging/BreathHolder",
+  "working_dir": "D:/Software_Packaging/Package_Staging/BreathHolder",
   "source_path": "D:/Software_Packaging/Source",
   "scan_requests_path": "D:/Software_Packaging/Source/Scan_Requests",
   "manual_installs_path": "D:/Software_Packaging/Source/Manual_Installs",

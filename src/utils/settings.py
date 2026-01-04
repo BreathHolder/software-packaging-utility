@@ -185,7 +185,7 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
     _add_path_row(
         group,
         row=5,
-        label="Packaged_Staging",
+        label="Package_Staging",
         variable=staging_var,
         browse=True,
         on_change=mark_dirty,
@@ -307,7 +307,7 @@ def build_settings_frame(parent: tk.Widget) -> ttk.Frame:
     _add_text_row(
         content_group,
         row=4,
-        label="Packaged_Staging",
+        label="Package_Staging",
         variable=content_age_packaged_staging_var,
         on_change=mark_dirty,
     )
@@ -460,7 +460,7 @@ def _save_settings(
         "Source": source_path,
         "Packaged_Applications": packaged_path,
         "Package_Prep": package_prep_path,
-        "Packaged_Staging": staging_path,
+        "Package_Staging": staging_path,
         "Archive": archive_path,
     }
     missing = [label for label, value in required.items() if not value.strip()]

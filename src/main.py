@@ -9,6 +9,8 @@ from tkinter import messagebox, ttk
 from src.utils.package_info_creator import build_package_info_creator_frame
 from src.utils.package_info_updater import build_package_info_updater_frame
 from src.utils.package_staging_builder import build_package_staging_frame
+from src.utils.package_documentation_builder import build_package_documentation_frame
+from src.utils.package_publisher import build_package_publisher_frame
 from src.utils.settings import build_settings_frame
 from src.utils.dependency_manager import build_dependency_manager_frame
 from src.ui_styles import apply_styles
@@ -21,7 +23,7 @@ class RibbonApp(tk.Tk):
         """Initialize the window, styles, and default page."""
         super().__init__()
         self.title("Software Packaging Utilities")
-        self.geometry("1200x960")
+        self.geometry("1200x1080")
         self.minsize(1000, 700)
 
         self._load_branding()
@@ -32,6 +34,8 @@ class RibbonApp(tk.Tk):
             "package_info": build_package_info_creator_frame,
             "package_info_update": build_package_info_updater_frame,
             "package_staging": build_package_staging_frame,
+            "package_docs": build_package_documentation_frame,
+            "package_publish": build_package_publisher_frame,
             "settings": build_settings_frame,
             "dependencies": build_dependency_manager_frame,
         }
@@ -91,6 +95,18 @@ class RibbonApp(tk.Tk):
             key="package_staging",
             label="Package Staging Builder",
             command=lambda: self._show_page("package_staging"),
+        )
+        self._add_ribbon_tab(
+            ribbon,
+            key="package_docs",
+            label="Package Doc Builder",
+            command=lambda: self._show_page("package_docs"),
+        )
+        self._add_ribbon_tab(
+            ribbon,
+            key="package_publish",
+            label="Publish Package",
+            command=lambda: self._show_page("package_publish"),
         )
         self._add_ribbon_tab(
             ribbon,
@@ -326,10 +342,27 @@ class RibbonApp(tk.Tk):
         """Enable mouse-wheel scrolling for the main content canvas."""
         def _on_mousewheel(event) -> None:
             """Scroll on Windows/macOS using MouseWheel delta."""
-            canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+            bbox = canvas.bbox("all")
+            if not bbox:
+                return
+            _, y1, _, y2 = bbox
+            if (y2 - y1) <= canvas.winfo_height():
+                return
+            steps = int(-1 * (event.delta / 120))
+            if steps > 3:
+                steps = 3
+            elif steps < -3:
+                steps = -3
+            canvas.yview_scroll(steps, "units")
 
         def _on_mousewheel_linux(event) -> None:
             """Scroll on Linux using button events."""
+            bbox = canvas.bbox("all")
+            if not bbox:
+                return
+            _, y1, _, y2 = bbox
+            if (y2 - y1) <= canvas.winfo_height():
+                return
             if event.num == 4:
                 canvas.yview_scroll(-1, "units")
             elif event.num == 5:

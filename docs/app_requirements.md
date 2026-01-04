@@ -98,16 +98,14 @@ package_root/
 │               │   ├── binary.exe              # Source installer binary used for the build.
 │               │   ├── binary_config.txt       # Config or transforms applied to the installer.
 │               │   ├── vendor_docs.txt         # Vendor documentation for configurations needed in packaging.
-│               │   └── Request_Info.txt        # Request metadata tied to the build.
 │               ├── dependencies/               # Dependencies required by the packaged app.
 │               │   ├── dependencies.txt        # Text manifest of required dependencies.
 │               │   └── dependencies.exe        # Optional dependency installer binary.
 │               ├── Packaged_App.exe            # Final packaged application.
 │               ├── Package_Info.txt            # Packaging metadata and notes.
-│               ├── Readme.txt                  # Notes for deployment or validation.
+│               ├── README.txt                  # Notes for deployment or validation.
 │               ├── prefetch.txt                # Prefetch data file generated from a script, denoting the Artifactory file path for the official package.
-│               └── Request_Info.txt            # Request metadata for this packaged app.
-├── Packaged_Staging/                           # Working area for building packages.
+├── Package_Staging/                           # Working area for building packages.
 ├── Archive/                                    # Archived content by source/type and retention policy.
 │   ├── Manual_Installs/                        # Source apps older than $retention_manual_installs days.
 │   ├── Scan_Requests/                          # Source scan requests older than $RETENTION_SCAN_REQUESTS days.

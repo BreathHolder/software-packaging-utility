@@ -197,7 +197,7 @@ def build_package_info_creator_frame(
                 values=[
                     "Scan results found. No vulnerabilities found",
                     "Scan results found. Vulnerabilities found and accepted by technology owner",
-                    "Scan results NOT found. Binary scan required prior to packaging",
+                    "Scan results NOT found or vulnerabilities found NOT accepted",
                 ],
                 state="readonly",
                 width=47,
