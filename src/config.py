@@ -32,6 +32,7 @@ RETENTION_PACKAGED_APPLICATIONS = 366
 FILE_PATHS_VENDOR_NAMES = SETTINGS_DIR / "vendor_names.json"
 FILE_PATHS_SOFTWARE_NAMES = SETTINGS_DIR / "software_names.json"
 FILE_PATHS_DEPENDENCY_NAMES = SETTINGS_DIR / "dependency_names.json"
+FILE_PATHS_BUSINESS_AREAS = SETTINGS_DIR / "business_areas.json"
 
 # Software paths (UNC-mapped to a local drive, e.g., D:\)
 SOFTWARE_PATHS_SOURCE = Path("D:/Software_Packaging/Source")
@@ -39,6 +40,7 @@ SOFTWARE_PATHS_SCAN_REQUESTS = SOFTWARE_PATHS_SOURCE / "Scan_Requests"
 SOFTWARE_PATHS_MANUAL_INSTALLS = SOFTWARE_PATHS_SOURCE / "Manual_Installs"
 SOFTWARE_PATHS_PACKAGED = Path("D:/Software_Packaging/Packaged_Applications")
 SOFTWARE_PATHS_STAGING = Path("D:/Software_Packaging/Packaged_Staging")
+SOFTWARE_PATHS_PACKAGE_PREP = Path("D:/Software_Packaging/Package_Prep")
 SOFTWARE_PATHS_PENDING_PROJECT_APPROVAL = Path(
     "D:/Software_Packaging/Pending_Project_Approval"
 )
