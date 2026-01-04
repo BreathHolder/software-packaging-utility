@@ -1,4 +1,4 @@
-﻿# Software Packaging Utilities
+# Software Packaging Utilities
 
 ![software packaging utility](./images/SPU-Logo-Square-256.png)
 
@@ -6,13 +6,16 @@ A Python application for package managing application source, standardize applic
 
 ## Features
 
-- **Package Info File Creator**: Load an installer, review metadata, and generate `PackageInfo.txt`.
+- **Package Info File Creator**: Load an installer, review metadata with an interactive promp, and generate `PackageInfo.txt`.
 - **Package Info File Updater**: Import an existing `PackageInfo.txt`, edit fields, and save updates.
 - **Package Staging Builder**: Prepares a standardized folder structure for packaging.
 - **Package Documentation Builder**: Generates documentation for the package.
+- **Package Publisher**: Publishes packages to a specified location.
+- **Package Renamer**: Renames packages based on specified criteria.
 - **Dependency Manager**: Manages and tracks software dependencies.
+- **Reporting**: Generates reports on package status and other metrics.
 - **Configurable Settings**: Configure source/packaging paths, settings file sources, and content age from the Settings tab.
-- **Robust Error Handling**: Comprehensive error handling and logging, with breakouts for distinct error logging and function execution results.
+- **Robust Logging**: Comprehensive logging of errors and function execution results to help with debugging.
 - **Type Safety**: Ensure type checking to prevent bottle-necked processes.
 - **Testing**: Includes a testing harness and tests for metadata extraction and screen source information.
 
@@ -71,11 +74,12 @@ software-packaging-utilities/
 │   └── utils/
 │       ├── __init__,.py
 │       ├── dependency_manager.py
+│       ├── logging_utils.py
 │       ├── metadata_extractor.py
-│       ├── package_builder.py
 │       ├── package_documentation_builder.py
 │       ├── package_info_creator.py
 │       ├── package_info_updater.py
+│       ├── package_publisher.py
 │       ├── package_renamer.py
 │       ├── package_staging_builder.py
 │       ├── reporting.py
