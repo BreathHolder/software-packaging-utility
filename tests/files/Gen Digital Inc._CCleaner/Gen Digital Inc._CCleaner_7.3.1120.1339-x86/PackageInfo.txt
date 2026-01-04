@@ -1,0 +1,41 @@
+Request ID: REQ012347
+Requestor Name: Alexander Ramsey
+Software Reference ID: EUA-UTIL-001
+Software Technology Owner ID: TECH_OWNER_002
+Licensed Software Flag: Newest+ N-1
+Business Areas: Back Office, Development, Marketing, Sales
+Software Vendor: Gen Digital Inc.
+Software Name: CCleaner
+Software Version: 7.3.1120.1339
+Software Architecture: x86
+Software SHA1 Hash: 12cf1507181c6dc18156c6d8ae172d07ca5f778b
+Software SHA256 Hash: 49422925430abe8f150ad94fd318a124ae33928b5c0dbd5d3c5e647a6fe87375
+Software Dependencies: Microsoft Visual C++ 2013 Redistributable (x86), Microsoft Visual C++ 2015-2022 Redistributable (x86)
+Software Vulnerability Scan Results Status: Scan results found. No vulnerabilities found
+##Software Vulnerability Scan Results Details Begin##
+Scan Information
+=========================================
+
+Start Time: Mon Jan 5 13:56:29 2024
+End Time:   MON Jan 5 14:01:54 2024
+
+Host Information
+=========================================
+
+DNS Name:        D-128-13-168.test-lab.acme.io
+Netbios Name:    GRA-ADAMS
+IP:              72.124.36.112
+MAC Address:     00:14:22:2b:66:24
+OS:              Microsoft Windows 11, 24H2
+
+Result Summary
+=========================================
+
+Critical: 0
+High:     0
+Medium:   0
+Low:      0
+Info:     20
+----------------
+Total:    20
+##Software Vulnerability Scan Results Details End##
