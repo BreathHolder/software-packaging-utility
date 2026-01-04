@@ -49,6 +49,7 @@ def build_dependency_manager_frame(parent: tk.Widget) -> ttk.Frame:
 
     name_var = tk.StringVar()
     path_var = tk.StringVar()
+    status_var = tk.StringVar(value="")
 
     def set_dirty(value: bool = True) -> None:
         """Mark the page dirty so tab switching warns about unsaved edits."""
@@ -64,6 +65,7 @@ def build_dependency_manager_frame(parent: tk.Widget) -> ttk.Frame:
 
     listbox = tk.Listbox(list_group, height=10, exportselection=False)
     listbox.grid(row=0, column=0, sticky="nsew")
+    _bind_listbox_mousewheel(listbox)
     scrollbar = ttk.Scrollbar(list_group, orient=tk.VERTICAL, command=listbox.yview)
     scrollbar.grid(row=0, column=1, sticky="ns")
     listbox.configure(yscrollcommand=scrollbar.set)
@@ -95,6 +97,14 @@ def build_dependency_manager_frame(parent: tk.Widget) -> ttk.Frame:
 
     actions = ttk.Frame(frame, style="Content.TFrame")
     actions.pack(fill=tk.X)
+    status_label = ttk.Label(
+        actions,
+        textvariable=status_var,
+        style="Body.TLabel",
+        font=("Segoe UI", 10),
+        foreground="#2e7d32",
+    )
+    status_label.pack(side=tk.LEFT, pady=(6, 0))
 
     dependencies: list[dict[str, str]] = _load_dependencies(dependency_path)
     _refresh_listbox(listbox, dependencies)
@@ -104,10 +114,13 @@ def build_dependency_manager_frame(parent: tk.Widget) -> ttk.Frame:
         selection = listbox.curselection()
         if not selection:
             return
-        index = selection[0]
-        item = dependencies[index]
-        name_var.set(item.get("name", ""))
-        path_var.set(item.get("path", ""))
+        name = listbox.get(selection[0])
+        match = next(
+            (item for item in dependencies if item.get("name", "") == name),
+            None,
+        )
+        name_var.set(name)
+        path_var.set(match.get("path", "") if match else "")
 
     listbox.bind("<<ListboxSelect>>", select_item)
 
@@ -159,6 +172,7 @@ def build_dependency_manager_frame(parent: tk.Widget) -> ttk.Frame:
         _log_dependency_change("update", name, path_value, previous_name, previous_path)
         _refresh_listbox(listbox, dependencies)
         listbox.selection_set(index)
+        status_var.set("Update successful")
         set_dirty(False)
 
     def delete_dependency() -> None:
@@ -325,3 +339,21 @@ def _resolve_path(path: str, base_dir: Path) -> Path:
     if path.replace("\\", "/").startswith("settings/"):
         return (base_dir.parent / path).resolve()
     return (base_dir / path).resolve()
+
+
+def _bind_listbox_mousewheel(listbox: tk.Listbox) -> None:
+    """Prevent listbox scrolling from bubbling to the main canvas."""
+    def _on_mousewheel(event) -> str:
+        listbox.yview_scroll(int(-1 * (event.delta / 120)), "units")
+        return "break"
+
+    def _on_mousewheel_linux(event) -> str:
+        if event.num == 4:
+            listbox.yview_scroll(-1, "units")
+        elif event.num == 5:
+            listbox.yview_scroll(1, "units")
+        return "break"
+
+    listbox.bind("<MouseWheel>", _on_mousewheel)
+    listbox.bind("<Button-4>", _on_mousewheel_linux)
+    listbox.bind("<Button-5>", _on_mousewheel_linux)
