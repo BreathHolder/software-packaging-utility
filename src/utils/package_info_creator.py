@@ -12,10 +12,13 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, simpledialog, ttk
 
 from src.config import (
+    FILE_PATHS_BUSINESS_AREAS,
     FILE_PATHS_DEPENDENCY_NAMES,
     FILE_PATHS_SOFTWARE_NAMES,
     FILE_PATHS_VENDOR_NAMES,
     LOGGING_DIR,
+    SETTINGS_DIR,
+    SOFTWARE_PATHS_PACKAGE_PREP,
 )
 from src.utils.metadata_extractor import (
     InstallerMetadata,
@@ -42,6 +45,7 @@ def build_package_info_creator_frame(
     vendor_options = _load_picklist(FILE_PATHS_VENDOR_NAMES)
     software_options = _load_picklist(FILE_PATHS_SOFTWARE_NAMES)
     dependency_options = _load_picklist(FILE_PATHS_DEPENDENCY_NAMES)
+    business_area_options = _load_picklist(FILE_PATHS_BUSINESS_AREAS)
 
     header = ttk.Label(
         frame,
@@ -158,6 +162,7 @@ def build_package_info_creator_frame(
         "Software Reference ID",
         "Software Technology Owner ID",
         "Licensed Software Flag",
+        "Business Areas",
         "Software Dependencies",
         "Software Vulnerability Scan Results",
     ]
@@ -262,6 +267,7 @@ def build_package_info_creator_frame(
                 dependencies_list.insert(tk.END, option)
             dependencies_list.grid(row=0, column=0, sticky="we")
             dependencies_list.bind("<<ListboxSelect>>", mark_dirty)
+            _bind_listbox_mousewheel(dependencies_list)
 
             other_var = tk.BooleanVar(value=False)
             other_check = ttk.Checkbutton(
@@ -292,12 +298,34 @@ def build_package_info_creator_frame(
             other_entry.bind("<KeyRelease>", mark_dirty)
 
             entry = {
+                "kind": "dependencies",
                 "listbox": dependencies_list,
                 "other_var": other_var,
                 "other_entry": other_entry,
                 "none_var": none_var,
                 "other_check": other_check,
                 "none_check": none_check,
+            }
+        elif label == "Business Areas":
+            areas_frame = ttk.Frame(manual_group)
+            areas_frame.grid(row=row, column=1, sticky="we", pady=4)
+            areas_frame.columnconfigure(0, weight=1)
+
+            areas_list = tk.Listbox(
+                areas_frame,
+                selectmode=tk.MULTIPLE,
+                height=5,
+                exportselection=False,
+            )
+            for option in business_area_options:
+                areas_list.insert(tk.END, option)
+            areas_list.grid(row=0, column=0, sticky="we")
+            areas_list.bind("<<ListboxSelect>>", mark_dirty)
+            _bind_listbox_mousewheel(areas_list)
+
+            entry = {
+                "kind": "multi_select",
+                "listbox": areas_list,
             }
         else:
             entry = ttk.Entry(manual_group, width=50)
@@ -388,7 +416,7 @@ def build_package_info_creator_frame(
 
     actions = ttk.Frame(frame, style="Content.TFrame")
     actions.pack(fill=tk.X)
-    prep_var = tk.BooleanVar(value=False)
+    prep_var = tk.BooleanVar(value=True)
     if allow_prep:
         prep_check = ttk.Checkbutton(actions, text="Prep for packaging", variable=prep_var)
         prep_check.pack(side=tk.LEFT)
@@ -687,23 +715,18 @@ def _generate_package_info(
             return
         output_dir = installer_path.parent
         if prep_for_packaging:
-            folder_name = _sanitize_folder_name(f"{vendor_name}_{software_name}")
-            output_dir = installer_path.parent / folder_name
+            folder_name = _sanitize_folder_name(
+                f"{vendor_name}_{software_name}_{software_version}-{software_architecture}"
+            )
+            output_dir = _get_package_prep_path() / folder_name
             output_dir.mkdir(parents=True, exist_ok=True)
         package_info_path = output_dir / "PackageInfo.txt"
 
     if package_info_path.exists():
-        if existing_package_info_path:
-            if not messagebox.askyesno(
-                "Overwrite PackageInfo.txt",
-                f"Overwrite existing PackageInfo.txt in:\n{output_dir}?",
-            ):
-                return
-        else:
-            messagebox.showerror(
-                "PackageInfo.txt Already Exists",
-                f"A PackageInfo.txt file already exists in:\n{output_dir}",
-            )
+        if not messagebox.askyesno(
+            "Overwrite PackageInfo.txt",
+            f"A PackageInfo.txt file already exists in:\n{output_dir}\n\nOverwrite?",
+        ):
             return
 
     manual_values = _collect_manual_values(
@@ -758,14 +781,18 @@ def _collect_manual_values(
     values: dict[str, str] = {}
     for label, widget in manual_widgets.items():
         if isinstance(widget, dict):
-            values[label] = _collect_dependency_values(
-                widget,
-                source_path,
-                vendor_name,
-                software_name,
-                software_version,
-                software_architecture,
-            )
+            kind = widget.get("kind")
+            if kind == "dependencies":
+                values[label] = _collect_dependency_values(
+                    widget,
+                    source_path,
+                    vendor_name,
+                    software_name,
+                    software_version,
+                    software_architecture,
+                )
+            elif kind == "multi_select":
+                values[label] = _collect_multi_select_values(widget)
         elif isinstance(widget, tk.Text):
             values[label] = widget.get("1.0", tk.END).strip()
         else:
@@ -790,6 +817,7 @@ def _build_package_info_content(
         f"Software Reference ID: {manual_values.get('Software Reference ID', '')}",
         f"Software Technology Owner ID: {manual_values.get('Software Technology Owner ID', '')}",
         f"Licensed Software Flag: {manual_values.get('Licensed Software Flag', '')}",
+        f"Business Areas: {manual_values.get('Business Areas', '')}",
         f"Software Vendor: {vendor_name}",
         f"Software Name: {software_name}",
         f"Software Version: {software_version}",
@@ -840,7 +868,11 @@ def _apply_package_info_values(
             widget.set(value)
             continue
         if isinstance(widget, dict):
-            _populate_dependencies(widget, value)
+            kind = widget.get("kind")
+            if kind == "dependencies":
+                _populate_dependencies(widget, value)
+            elif kind == "multi_select":
+                _populate_multi_select(widget, value)
         elif isinstance(widget, tk.Text):
             widget.configure(state="normal")
             widget.delete("1.0", tk.END)
@@ -955,9 +987,15 @@ def _validate_required_fields(
     for label, widget in manual_widgets.items():
         label_widget = manual_labels.get(label)
         if isinstance(widget, dict):
-            if not _has_dependency_selection(widget):
-                missing_fields.append(label)
-                _set_label_error(label_widget)
+            kind = widget.get("kind")
+            if kind == "dependencies":
+                if not _has_dependency_selection(widget):
+                    missing_fields.append(label)
+                    _set_label_error(label_widget)
+            elif kind == "multi_select":
+                if not _has_multi_select_selection(widget):
+                    missing_fields.append(label)
+                    _set_label_error(label_widget)
         elif isinstance(widget, tk.Text):
             if widget.winfo_ismapped() and not widget.get("1.0", tk.END).strip():
                 missing_fields.append(label)
@@ -1062,6 +1100,34 @@ def _populate_dependencies(widget_parts: dict, value: str) -> None:
         other_entry.insert(0, ", ".join(unknown_values))
 
 
+def _collect_multi_select_values(widget_parts: dict) -> str:
+    """Collect multi-select listbox values into a comma string."""
+    listbox = widget_parts["listbox"]
+    selections = [listbox.get(i) for i in listbox.curselection()]
+    return ", ".join(selections)
+
+
+def _has_multi_select_selection(widget_parts: dict) -> bool:
+    """Return True if at least one multi-select item is chosen."""
+    listbox = widget_parts["listbox"]
+    return bool(listbox.curselection())
+
+
+def _populate_multi_select(widget_parts: dict, value: str) -> None:
+    """Populate multi-select listbox from a stored value string."""
+    listbox = widget_parts["listbox"]
+    listbox.selection_clear(0, tk.END)
+    selections = [item.strip() for item in value.split(",") if item.strip()]
+    if not selections:
+        return
+    listbox_values = listbox.get(0, tk.END)
+    for item in selections:
+        if item not in listbox_values:
+            listbox.insert(tk.END, item)
+            listbox_values = listbox.get(0, tk.END)
+        listbox.selection_set(listbox_values.index(item))
+
+
 def _toggle_no_dependencies(
     listbox: tk.Listbox,
     other_check: Optional[ttk.Checkbutton],
@@ -1116,3 +1182,46 @@ def _attach_tooltip(widget: tk.Widget, text: str) -> None:
 
     widget.bind("<Enter>", show_tooltip)
     widget.bind("<Leave>", hide_tooltip)
+
+
+def _resolve_path(path: str, base_dir: Path) -> Path:
+    """Resolve relative paths against base_dir."""
+    if "://" in path or Path(path).is_absolute():
+        return Path(path)
+    if path.replace("\\", "/").startswith("settings/"):
+        return (base_dir.parent / path).resolve()
+    return (base_dir / path).resolve()
+
+
+def _get_package_prep_path() -> Path:
+    """Resolve the Package_Prep path from settings.json."""
+    settings_path = SETTINGS_DIR / "settings.json"
+    try:
+        raw = settings_path.read_text(encoding="utf-8")
+        settings = json.loads(raw)
+    except (OSError, json.JSONDecodeError):
+        return SOFTWARE_PATHS_PACKAGE_PREP
+    if not isinstance(settings, dict):
+        return SOFTWARE_PATHS_PACKAGE_PREP
+    value = settings.get("package_prep_path")
+    if isinstance(value, str) and value.strip():
+        return _resolve_path(value.strip(), SETTINGS_DIR)
+    return SOFTWARE_PATHS_PACKAGE_PREP
+
+
+def _bind_listbox_mousewheel(listbox: tk.Listbox) -> None:
+    """Prevent listbox scrolling from bubbling to the main canvas."""
+    def _on_mousewheel(event) -> str:
+        listbox.yview_scroll(int(-1 * (event.delta / 120)), "units")
+        return "break"
+
+    def _on_mousewheel_linux(event) -> str:
+        if event.num == 4:
+            listbox.yview_scroll(-1, "units")
+        elif event.num == 5:
+            listbox.yview_scroll(1, "units")
+        return "break"
+
+    listbox.bind("<MouseWheel>", _on_mousewheel)
+    listbox.bind("<Button-4>", _on_mousewheel_linux)
+    listbox.bind("<Button-5>", _on_mousewheel_linux)
