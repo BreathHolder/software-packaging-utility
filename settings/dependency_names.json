@@ -1,26 +1,22 @@
 [
   {
-    "name": "Microsoft .NET Framework",
-    "path": ""
-  },
-  {
-    "name": "Microsoft .NET Core",
-    "path": ""
-  },
-  {
     "name": "Generic Java Runtime Environment",
     "path": ""
   },
   {
-    "name": "Oracle Java Runtime Environment",
+    "name": "JDBC Driver for Oracle Server",
     "path": ""
   },
   {
-    "name": "Microsoft ASP.NET Core Runtime",
-    "path": ""
+    "name": "Microsoft .NET Core Runtime x64",
+    "path": "D:\\Software_Packaging\\Source\\Manual_Installs\\App_Dependencies\\dotnet-sdk-10.0.101-win-x64.exe"
   },
   {
-    "name": "MySQL Connector/ODBC",
+    "name": "Microsoft .NET Core Runtime x86",
+    "path": "D:\\Software_Packaging\\Source\\Manual_Installs\\App_Dependencies\\dotnet-sdk-10.0.101-win-x86.exe"
+  },
+  {
+    "name": "Microsoft .NET Framework",
     "path": ""
   },
   {
@@ -28,19 +24,19 @@
     "path": ""
   },
   {
-    "name": "Microsoft PowerShell 5.x",
+    "name": "Microsoft PowerShell 7.x x64",
+    "path": "D:\\Software_Packaging\\Source\\Manual_Installs\\App_Dependencies\\PowerShell-7.5.4-win-x64.msi"
+  },
+  {
+    "name": "Microsoft PowerShell 7.x x86",
+    "path": "D:\\Software_Packaging\\Source\\Manual_Installs\\App_Dependencies\\PowerShell-7.5.4-win-x86.msi"
+  },
+  {
+    "name": "Microsoft Visual C++ 2010 Redistributable (x64)",
     "path": ""
   },
   {
-    "name": "Microsoft PowerShell 7.x",
-    "path": ""
-  },
-  {
-    "name": "Microsoft Visual C++ 2015-2022 Redistributable (x64)",
-    "path": ""
-  },
-  {
-    "name": "Microsoft Visual C++ 2015-2022 Redistributable (x86)",
+    "name": "Microsoft Visual C++ 2010 Redistributable (x86)",
     "path": ""
   },
   {
@@ -52,11 +48,15 @@
     "path": ""
   },
   {
-    "name": "Microsoft Visual C++ 2010 Redistributable (x64)",
+    "name": "Microsoft Visual C++ 2015-2022 Redistributable (x64)",
     "path": ""
   },
   {
-    "name": "Microsoft Visual C++ 2010 Redistributable (x86)",
+    "name": "Microsoft Visual C++ 2015-2022 Redistributable (x86)",
+    "path": ""
+  },
+  {
+    "name": "MySQL Connector/ODBC",
     "path": ""
   },
   {
@@ -68,7 +68,11 @@
     "path": ""
   },
   {
-    "name": "OLE DB Driver for SQL Server",
+    "name": "OLE DB Driver for SQL Server x64",
+    "path": "D:\\Software_Packaging\\Source\\Manual_Installs\\App_Dependencies\\msoledbsql-x64.msi"
+  },
+  {
+    "name": "Oracle Java Runtime Environment",
     "path": ""
   },
   {
@@ -77,10 +81,6 @@
   },
   {
     "name": "Python Runtime",
-    "path": ""
-  },
-  {
-    "name": "JDBC Driver for Oracle Server",
-    "path": ""
+    "path": "D:\\Software_Packaging\\Source\\Manual_Installs\\App_Dependencies\\python-manager-25.2.msix"
   }
 ]
